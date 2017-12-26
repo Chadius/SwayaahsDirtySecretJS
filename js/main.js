@@ -10,6 +10,7 @@ window.onload = function() {
 }
 
 function imageLoadingDoneSoStartGame() {
+  console.log("St")
   var framesPerSecond = 30;
   setInterval(updateAll, 1000/framesPerSecond);
 
@@ -32,6 +33,7 @@ function moveAll() {
 }
 
 function drawAll() {
+  battlefield.drawBattlefield();
   //drawTracks();
   //blueCar.draw();
   //greenCar.draw();
