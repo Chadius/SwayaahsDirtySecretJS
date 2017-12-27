@@ -11,55 +11,48 @@ var battlefield = {
     1,1,3,2,0
   ],
 
-  tile_size: 96,
+  renderer: null,
 
-  tile_to_image_mapping: {},
-
-  finished_loading_images: false,
-  pending_required_images_count: 0,
-
-  loadRequiredImages: function() {
-    // These are images that MUST be loaded before displaying anything to the user.
-    new_images = image_loading.loadRequiredImagesForObject(
-      [
-        {varName: "wall", theFile: "Wall Tile.png"},
-        {varName: "grass", theFile: "Green Tile.png"},
-        {varName: "road", theFile: "Road Tile.png"},
-        {varName: "sky", theFile: "Sky Tile.png"}
-      ],
-      battlefield
-    );
-    battlefield.tile_to_image_mapping[0] = new_images["wall"];
-    battlefield.tile_to_image_mapping[1] = new_images["grass"];
-    battlefield.tile_to_image_mapping[2] = new_images["road"];
-    battlefield.tile_to_image_mapping[3] = new_images["sky"];
+  tile_code_to_nickname: {
+    0: "wall",
+    1: "road",
+    2: "grass",
+    3: "sky"
   },
 
   drawBattlefield: function() {
-    //Draws all of the tiles on the field.
+    //Draws all of the graphics for the battlefield.
 
+    // First get all of the tile locations.
+    tile_info = battlefield.getTerrainTileInfo();
+    
+    // Render the tiles.
+    battlefield.renderer.drawBattlefield(tile_info);
+  },
+
+  getTerrainTileInfo: function() {
+    // Returns a list of objects that indicate the tiles that make up the terrain.
+    // Each object contains these keys:
+    //   xindex: horizontal position of tile
+    //   yindex: vertical position of tile
+    //   tile_image_name: nickname for the image.
+    tile_info = [];
     tiles = battlefield.battlefield_tiles;
     tile_width = battlefield.tile_size;
-    image_mapping = battlefield.tile_to_image_mapping;
     tiles.forEach(function(tile_code, index) {
       //Determine where the tile should be.
       xindex = (index % battlefield.battlefield_width);
       yindex = Math.floor(index / battlefield.battlefield_width);
 
-      //Determine where to draw the tile.
-      xcoord = xindex * tile_width;
-      ycoord = yindex * tile_width;
+      tile_nickname = battlefield.tile_code_to_nickname[tile_code];
 
-      // This is a hex grid. Offset every other line by half the width.
-      if (yindex % 2 == 1) {
-        xcoord += tile_width / 2;
-      }
-
-      //Get the image to draw on this tile.
-      tile_to_draw = image_mapping[tile_code];
-
-      //Now draw the image.
-      canvasContext.drawImage(tile_to_draw, xcoord, ycoord);
+      // Add all information.
+      tile_info.push({
+        'xindex': xindex,
+        'yindex': yindex,
+        'tile_image_name': tile_nickname,
+      });
     });
+    return tile_info;
   }
 }

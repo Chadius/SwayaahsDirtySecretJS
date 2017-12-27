@@ -1,25 +1,17 @@
 function loadImages() {
   // Create a list of all of the objects that must load images.
   objects_loading_images = [
-    battlefield
+    battlefield_web_render
   ];
+
+  // Set up the graphics renderer.
+  battlefield.renderer = battlefield_web_render;
+
   image_loading.objects_currently_loading_images_count = objects_loading_images.length;
 
   objects_loading_images.forEach(function(obj) {
     obj.loadRequiredImages();
   });
-}
-
-function loadImagesOld() {
-  var imageList = [
-    {varName: grass_tile_img, theFile: "Green Tile.png"},
-    {varName: road_tile_img, theFile: "Road Tile.png"}
-  ];
-
-  picsToLoad = imageList.length;
-  for(var i=0; i<imageList.length; i++) {
-    beginLoadingImage(imageList[i].varName, imageList[i].theFile);
-  }
 }
 
 var image_loading = {
