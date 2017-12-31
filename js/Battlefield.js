@@ -25,9 +25,15 @@ var battlefield = {
 
     // First get all of the tile locations.
     tile_info = battlefield.getTerrainTileInfo();
-    
+
     // Render the tiles.
-    battlefield.renderer.drawBattlefield(tile_info);
+    battlefield.renderer.drawBattlefield(
+      tile_info,
+      {
+        'xcoord': -50,
+        'ycoord': -30,
+      }
+    );
   },
 
   getTerrainTileInfo: function() {

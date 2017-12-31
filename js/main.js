@@ -3,7 +3,7 @@ window.onload = function() {
   canvasContext = canvas.getContext('2d');
 
   var backgroundColor = "hsl(288, 10%, 15%)";
-  colorRect(0,0,canvas.width,canvas.height, backgroundColor); //  hsl(288, 100%, 50%));
+  colorRect(0,0,canvas.width,canvas.height, backgroundColor);
   colorText("Loading images", canvas.width/2, canvas.height/2, "white");
 
   loadImages();
