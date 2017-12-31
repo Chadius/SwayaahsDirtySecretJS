@@ -28,11 +28,12 @@ var battlefield = {
 
     // Render the tiles.
     battlefield.renderer.drawBattlefield(
-      tile_info,
+      tile_info['tile_texture'],
       {
-        'xcoord': -50,
-        'ycoord': -30,
-      }
+        'xcoord': -100,
+        'ycoord': -100,
+      },
+      tile_info['size']
     );
   },
 
@@ -42,9 +43,14 @@ var battlefield = {
     //   xindex: horizontal position of tile
     //   yindex: vertical position of tile
     //   tile_image_name: nickname for the image.
-    tile_info = [];
+    tile_info = {
+      'size':{},
+      'tile_texture':[],
+      'tile_movement':[]
+    };
     tiles = battlefield.battlefield_tiles;
-    tile_width = battlefield.tile_size;
+    tile_width = 0;
+    tile_height = 0;
     tiles.forEach(function(tile_code, index) {
       //Determine where the tile should be.
       xindex = (index % battlefield.battlefield_width);
@@ -52,13 +58,31 @@ var battlefield = {
 
       tile_nickname = battlefield.tile_code_to_nickname[tile_code];
 
+      if (xindex >= tile_width) {
+        tile_width = xindex + 1;
+      }
+
+      if (yindex >= tile_height) {
+        tile_height = yindex + 1;
+      }
+
       // Add all information.
-      tile_info.push({
+      tile_info['tile_texture'].push({
+        'xindex': xindex,
+        'yindex': yindex,
+        'tile_image_name': tile_nickname,
+      });
+
+      tile_info['tile_movement'].push({
         'xindex': xindex,
         'yindex': yindex,
         'tile_image_name': tile_nickname,
       });
     });
+
+    // Add the overall dimensions of the battlefield.
+    tile_info['size']['width'] = tile_width;
+    tile_info['size']['height'] = tile_height;
     return tile_info;
   }
 }

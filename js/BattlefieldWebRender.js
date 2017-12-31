@@ -28,14 +28,23 @@ var battlefield_web_render = {
     battlefield_web_render.tile_to_image_mapping['sky'] = new_images["sky"];
   },
 
-  drawBattlefield: function(tile_drawing_information, camera_position) {
+  drawBattlefield: function(tile_drawing_information, camera_position, battlefield_size) {
     //Draws all of the given tiles on the field.
     // tile_drawing_information: A list of objects. Objects should have these keys
-    //   xindex: horizontal position of tile
-    //   yindex: vertical position of tile
-    //   tile_image_name: nickname for the image.
     // camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
+    // battlefield_size: An object that has the width and height of the battlefield (in tiles)
 
+    battlefield_web_render.drawBattlefieldBackground();
+
+    // Draw the battlefield shadow.
+    battlefield_web_render.drawBattlefieldShadow(camera_position, battlefield_size);
+
+    // Now Draw the tiles.
+    battlefield_web_render.drawBattlefieldTiles(tile_drawing_information, camera_position);
+  },
+
+  drawBattlefieldBackground: function() {
+    // Draws the background.
     var backgroundColor = "hsl(288, 10%, 15%)";
     colorRect(
       0,
@@ -44,7 +53,44 @@ var battlefield_web_render = {
       battlefield_web_render.screen_dimensions.height,
       backgroundColor
     );
+  },
 
+  drawBattlefieldShadow: function(camera_position, battlefield_size) {
+    // Draws a shadow that the battlefield will be contained within.
+    // camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
+    // battlefield_size: An object that has the width and height of the battlefield (in tiles)
+
+    // Record the size of the tiles.
+    tile_size = battlefield_web_render.tile_size;
+    half_tile_size = 0.5 * battlefield_web_render.tile_size;
+
+    // The upperleft corner of the shadow should be half a tile back.
+    shadowLeft = 0 - camera_position.xcoord - half_tile_size;
+    shadowTop = 0 - camera_position.ycoord - half_tile_size;
+
+    // The width should be one tile width away from the right most tile.
+    // This is a hex grid, so even rows are pushed half a tile outward.
+    shadowWidth = battlefield_size['width'] * tile_size + tile_size + half_tile_size;
+
+    // The height of the shadow should be one tile height more than the battlefield's height.
+    shadowHeight = battlefield_size['height'] * tile_size + tile_size;
+
+    // Get the color for the shadow- A transparent black.
+    var shadowColor = "hsla(288, 0%, 50%, 0.5)";
+
+    // Draw a shadow for the battlefield.
+    colorRect(shadowLeft, shadowTop, shadowWidth, shadowHeight, shadowColor);
+  },
+
+  drawBattlefieldTiles: function(tile_drawing_information, camera_position, battlefield_size) {
+    // Draws all of the given tiles on the field.
+    // tile_drawing_information: A list of objects. Objects should have these keys
+    //   xindex: horizontal position of tile
+    //   yindex: vertical position of tile
+    //   tile_image_name: nickname for the image.
+    // camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
+
+    //Now draw the tiles.
     image_mapping = battlefield_web_render.tile_to_image_mapping;
     tile_size = battlefield_web_render.tile_size;
 
@@ -71,5 +117,5 @@ var battlefield_web_render = {
       //Now draw the image.
       canvasContext.drawImage(tile_to_draw, xcoord, ycoord);
     });
-  }
+  },
 }
