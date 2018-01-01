@@ -11,28 +11,72 @@ var battlefield_web_render = {
   pending_required_images_count: 0,
   screen_dimensions: {'width':null, 'height':null},
 
+  tile_image_database: {
+    "wall": {
+      filename: "Wall Tile.png",
+      tile_to_image_mapping_key: "wall",
+      nickname: "wall"
+    },
+    "grass": {
+      filename: "Green Tile.png",
+      tile_to_image_mapping_key: "grass",
+      nickname: "grass"
+    },
+    "sky": {
+      filename: "Sky Tile.png",
+      tile_to_image_mapping_key: "sky",
+      nickname: "sky"
+    },
+    "road": {
+      filename: "Road Tile.png",
+      tile_to_image_mapping_key: "road",
+      nickname: "road"
+    },
+    "single": {
+      filename: "default_move_tile.png",
+      tile_to_image_mapping_key: "single",
+      nickname: "single"
+    },
+    "double": {
+      filename: "double_tile.png",
+      tile_to_image_mapping_key: "double",
+      nickname: "double"
+    },
+    "passthrough": {
+      filename: "pass_through_tile.png",
+      tile_to_image_mapping_key: "passthrough",
+      nickname: "passthrough"
+    }
+  },
+
   loadRequiredImages: function() {
     // These are images that MUST be loaded before displaying anything to the user.
+    var name_to_file_mapping = [];
+    var tileSet = ["single", "double", "passthrough", "wall"];
+
+    // For the tileset, associate the image filename to the each tile.
+    tileSet.forEach(function(tilename){
+      varName = tilename;
+      theFile = battlefield_web_render.tile_image_database[tilename].filename;
+
+      name_to_file_mapping.push(
+        {varName: varName, theFile: theFile}
+      );
+    });
+
+    // Now load the images.
     new_images = image_loading.loadRequiredImagesForObject(
-      [
-        {varName: "wall", theFile: "Wall Tile.png"},
-        {varName: "grass", theFile: "Green Tile.png"},
-        {varName: "road", theFile: "Road Tile.png"},
-        {varName: "sky", theFile: "Sky Tile.png"},
-        {varName: "single", theFile: "default_move_tile.png"},
-        {varName: "double", theFile: "double_tile.png"},
-        {varName: "passthrough", theFile: "pass_through_tile.png"}
-      ],
+      name_to_file_mapping,
       battlefield_web_render
     );
-    battlefield_web_render.tile_to_image_mapping['single'] = new_images["single"];
-    battlefield_web_render.tile_to_image_mapping['double'] = new_images["double"];
-    battlefield_web_render.tile_to_image_mapping['passthrough'] = new_images["passthrough"];
 
-    battlefield_web_render.tile_to_image_mapping['wall'] = new_images["wall"];
-    battlefield_web_render.tile_to_image_mapping['grass'] = new_images["grass"];
-    battlefield_web_render.tile_to_image_mapping['road'] = new_images["road"];
-    battlefield_web_render.tile_to_image_mapping['sky'] = new_images["sky"];
+    // Associate the loaded images to each tile.
+    tileSet.forEach(function(tilename){
+      tile_to_image_mapping_key = battlefield_web_render.tile_image_database[tilename].tile_to_image_mapping_key;
+      nickname = battlefield_web_render.tile_image_database[tilename].nickname;
+
+      battlefield_web_render.tile_to_image_mapping[tile_to_image_mapping_key] = new_images[nickname];
+    });
   },
 
   drawBattlefield: function(tile_drawing_information, camera_position, battlefield_size) {
