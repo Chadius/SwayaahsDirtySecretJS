@@ -18,10 +18,17 @@ var battlefield_web_render = {
         {varName: "wall", theFile: "Wall Tile.png"},
         {varName: "grass", theFile: "Green Tile.png"},
         {varName: "road", theFile: "Road Tile.png"},
-        {varName: "sky", theFile: "Sky Tile.png"}
+        {varName: "sky", theFile: "Sky Tile.png"},
+        {varName: "single", theFile: "default_move_tile.png"},
+        {varName: "double", theFile: "double_tile.png"},
+        {varName: "passthrough", theFile: "pass_through_tile.png"}
       ],
       battlefield_web_render
     );
+    battlefield_web_render.tile_to_image_mapping['single'] = new_images["single"];
+    battlefield_web_render.tile_to_image_mapping['double'] = new_images["double"];
+    battlefield_web_render.tile_to_image_mapping['passthrough'] = new_images["passthrough"];
+
     battlefield_web_render.tile_to_image_mapping['wall'] = new_images["wall"];
     battlefield_web_render.tile_to_image_mapping['grass'] = new_images["grass"];
     battlefield_web_render.tile_to_image_mapping['road'] = new_images["road"];

@@ -15,9 +15,9 @@ var battlefield = {
 
   tile_code_to_nickname: {
     0: "wall",
-    1: "road",
-    2: "grass",
-    3: "sky"
+    1: "single",
+    2: "double",
+    3: "passthrough"
   },
 
   drawBattlefield: function() {
