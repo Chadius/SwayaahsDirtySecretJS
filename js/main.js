@@ -13,7 +13,7 @@ function imageLoadingDoneSoStartGame() {
   var framesPerSecond = 30;
   setInterval(updateAll, 1000/framesPerSecond);
 
-  //setupInput();
+  inputHandler.setupInput(canvas);
   //loadLevel(levelOne);
 }
 
