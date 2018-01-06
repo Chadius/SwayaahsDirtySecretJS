@@ -49,6 +49,11 @@ var battlefield_web_render = {
     }
   },
 
+  mouseLocation: {
+    "mouseX": -1,
+    "mouseY": -1
+  },
+
   loadRequiredImages: function() {
     // These are images that MUST be loaded before displaying anything to the user.
     var name_to_file_mapping = [];
@@ -92,6 +97,11 @@ var battlefield_web_render = {
 
     // Now Draw the tiles.
     battlefield_web_render.drawBattlefieldTiles(tile_drawing_information, camera_position);
+
+    // Draw the mouse coordinates.
+    mouseX = battlefield_web_render.mouseLocation["mouseX"];
+    mouseY = battlefield_web_render.mouseLocation["mouseY"];
+    colorText("("+ mouseX + ", "+ mouseY +")", canvas.width - 100, canvas.height * 0.95, "hsl(0,100%,100%)");
   },
 
   drawBattlefieldBackground: function() {
@@ -168,5 +178,12 @@ var battlefield_web_render = {
       //Now draw the image.
       canvasContext.drawImage(tile_to_draw, xcoord, ycoord);
     });
+  },
+
+  update_mouse_location: function(mouseX, mouseY) {
+    battlefield_web_render.mouseLocation = {
+      "mouseX": mouseX,
+      "mouseY": mouseY
+    };
   },
 }

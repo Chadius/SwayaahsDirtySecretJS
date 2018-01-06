@@ -84,5 +84,20 @@ var battlefield = {
     tile_info['size']['width'] = tile_width;
     tile_info['size']['height'] = tile_height;
     return tile_info;
+  },
+
+  handleInput: function(input_state) {
+    /* interpret the input state. */
+    mouseX = input_state.mouseX;
+    mouseY = input_state.mouseY;
+
+    // Ask the renderer what the mouse is hovering on top of.
+    //battlefield.renderer.interpret_mouse_location(mouseX, mouseY);
+
+    // Parse the return value to understand what it clicked on.
+    // For now we just need the location.
+
+    // Once we've parsed the situation, tell the web renderer what to do.
+    battlefield.renderer.update_mouse_location(mouseX, mouseY);
   }
 }

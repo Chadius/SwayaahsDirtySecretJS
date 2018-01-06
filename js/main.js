@@ -27,6 +27,7 @@ function updateAll() {
 }
 
 function moveAll() {
+  battlefield.handleInput(inputHandler);
   //blueCar.move();
   //greenCar.move();
 }
