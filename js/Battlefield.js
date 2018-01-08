@@ -98,6 +98,6 @@ var battlefield = {
     // For now we just need the location.
 
     // Once we've parsed the situation, tell the web renderer what to do.
-    battlefield.renderer.update_mouse_location(mouseX, mouseY);
+    battlefield.renderer.update_mouse_location(mouseX, mouseY, battlefield_width, battlefield_tiles.length);
   }
 }

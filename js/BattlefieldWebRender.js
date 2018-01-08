@@ -54,6 +54,13 @@ var battlefield_web_render = {
     "mouseY": -1
   },
 
+  tileHover = {
+    "currently_hovering": false,
+    "column": -1,
+    "row": -1,
+    "index": -1
+  },
+
   loadRequiredImages: function() {
     // These are images that MUST be loaded before displaying anything to the user.
     var name_to_file_mapping = [];
@@ -180,10 +187,72 @@ var battlefield_web_render = {
     });
   },
 
-  update_mouse_location: function(mouseX, mouseY) {
+  update_mouse_location: function(mouseX, mouseY, battlefield_width, battlefield_tile_count) {
     battlefield_web_render.mouseLocation = {
       "mouseX": mouseX,
       "mouseY": mouseY
     };
+
+    battlefield_web_render.tileHover = {
+      "currently_hovering": false,
+      "column": -1,
+      "row": -1,
+      "index": -1
+    };
+
+    // Which tile is the mouse hovering over?
+    // First figure out if it's on the battlefield.
+    mouseFieldX = camera_position.xcoord - mouseX;
+    mouseFieldY = camera_position.ycoord - mouseY;
+
+    tile_size = battlefield_web_render.tile_size;
+    battlefield_pixel_width = battlefield_width * tile_size;
+    battlefield_pixel_height = Math.ceil(battlefield_tile_count / battlefield_width);
+
+    // If it isn't on the field, then it's not hovering.
+    not_on_horizontal = (mouseFieldX < 0 || mouseFieldX > battlefield_pixel_width);
+    not_on_vertical = (mouseFieldY < 0 || mouseFieldY > battlefield_pixel_height);
+
+    if (not_on_vertical || not_on_horizontal) {
+      battlefield_web_render.tileHover = {
+        "currently_hovering": false,
+        "column": -1,
+        "row": -1,
+        "index": -1
+      };
+    }
+    else {
+      // Determine which row the cursor is on.
+      tile_row = Math.floor(mouseFieldY / tile_size);
+
+      // This is a hex grid, so every other row has an offset.
+      // Now determine the column.
+      tile_column = Math.floor(mouseFieldX / tile_size);
+      if (tile_row % 2 == 1) {
+        tile_column = Math.floor((mouseFieldX + half_tile_size) / tile_size);
+      }
+
+      // Get the index.
+      tile_index = (tile_row * battlefield_width) + tile_column;
+
+      // If the given tile doesn't exist, the tile isn't hovering.
+      if (tile_index >= battlefield_tile_count) {
+        battlefield_web_render.tileHover = {
+          "currently_hovering": false,
+          "column": -1,
+          "row": -1,
+          "index": -1
+        };
+      }
+      else {
+        // Update the variable.
+        battlefield_web_render.tileHover = {
+          "currently_hovering": true,
+          "column": tile_column,
+          "row": tile_row,
+          "index": tile_index
+        };
+      }
+    }
   },
 }
