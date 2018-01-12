@@ -54,7 +54,7 @@ var battlefield_web_render = {
     "mouseY": -1
   },
 
-  tileHover = {
+  tileHover: {
     "currently_hovering": false,
     "column": -1,
     "row": -1,
@@ -187,7 +187,7 @@ var battlefield_web_render = {
     });
   },
 
-  update_mouse_location: function(mouseX, mouseY, battlefield_width, battlefield_tile_count) {
+  update_mouse_location: function(mouseX, mouseY, camera_position, battlefield_width, battlefield_tile_count) {
     battlefield_web_render.mouseLocation = {
       "mouseX": mouseX,
       "mouseY": mouseY
