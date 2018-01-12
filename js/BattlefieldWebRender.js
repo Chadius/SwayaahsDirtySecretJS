@@ -202,12 +202,13 @@ var battlefield_web_render = {
 
     // Which tile is the mouse hovering over?
     // First figure out if it's on the battlefield.
-    mouseFieldX = camera_position.xcoord - mouseX;
-    mouseFieldY = camera_position.ycoord - mouseY;
+    mouseFieldX = mouseX - camera_position.xcoord;
+    mouseFieldY = mouseY - camera_position.ycoord;
 
     tile_size = battlefield_web_render.tile_size;
+    half_tile_size = tile_size / 2;
     battlefield_pixel_width = battlefield_width * tile_size;
-    battlefield_pixel_height = Math.ceil(battlefield_tile_count / battlefield_width);
+    battlefield_pixel_height = Math.ceil(battlefield_tile_count / battlefield_width) * tile_size;
 
     // If it isn't on the field, then it's not hovering.
     not_on_horizontal = (mouseFieldX < 0 || mouseFieldX > battlefield_pixel_width);
@@ -224,12 +225,12 @@ var battlefield_web_render = {
     else {
       // Determine which row the cursor is on.
       tile_row = Math.floor(mouseFieldY / tile_size);
-
       // This is a hex grid, so every other row has an offset.
       // Now determine the column.
       tile_column = Math.floor(mouseFieldX / tile_size);
+
       if (tile_row % 2 == 1) {
-        tile_column = Math.floor((mouseFieldX + half_tile_size) / tile_size);
+        tile_column = Math.floor((mouseFieldX - half_tile_size) / tile_size);
       }
 
       // Get the index.
