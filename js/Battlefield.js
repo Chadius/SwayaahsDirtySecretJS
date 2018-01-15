@@ -92,7 +92,6 @@ var battlefield = {
     mouseY = input_state.mouseY;
 
     // Ask the renderer what the mouse is hovering on top of.
-    //battlefield.renderer.interpret_mouse_location(mouseX, mouseY);
 
     // Parse the return value to understand what it clicked on.
     // For now we just need the location.

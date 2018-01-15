@@ -1,8 +1,22 @@
 describe("BattlefieldWebRender", function() {
   var tile_size = 0;
+  var half_tile_size = 0;
+  var canvas = {
+    width: 0,
+    height: 0,
+  };
+  var camera_position = {
+    xcoord: 0,
+    ycoord: 0,
+  };
 
   beforeEach(function() {
     tile_size = battlefield_web_render.tile_size;
+    half_tile_size = tile_size / 2.0;
+    canvas = {
+      width: tile_size * 3,
+      height: tile_size * 3,
+    };
     battlefield_web_render.tileHover = {
       "currently_hovering": false,
       "column": -1,
@@ -162,4 +176,79 @@ describe("BattlefieldWebRender", function() {
    expect(tileHover["column"]).toBe(-1);
    expect(tileHover["index"]).toBe(-1);
   });
+
+  it("Moves the camera horizontally", function() {
+    new_camera_position = battlefield_web_render.get_new_camera_position(
+      {
+        xcoord: tile_size,
+        ycoord: tile_size
+      },
+      {
+        mouseX: 0,
+        mouseY: canvas.height / 2.0
+      },
+      {
+        width: canvas.width,
+        height: canvas.height
+      },
+      2,
+      4
+    );
+
+    expect(new_camera_position["x"]).toBeLessThan(tile_size);
+    expect(new_camera_position["y"]).toBe(tile_size);
+  });
+
+  it("Moves the camera vertically", function() {
+    new_camera_position = battlefield_web_render.get_new_camera_position(
+      {
+        xcoord: tile_size,
+        ycoord: tile_size
+      },
+      {
+        mouseX: canvas.width / 2.0,
+        mouseY: 0
+      },
+      {
+        width: canvas.width,
+        height: canvas.height
+      },
+      2,
+      4
+    );
+
+    expect(new_camera_position["x"]).toBe(tile_size);
+    expect(new_camera_position["y"]).toBeLessThan(tile_size);
+  });
+
+  it("Moves the camera diagonally", function() {
+    new_camera_position = battlefield_web_render.get_new_camera_position(
+      {
+        xcoord: -3 * tile_size,
+        ycoord: -3 * tile_size
+      },
+      {
+        mouseX: canvas.width,
+        mouseY: canvas.height
+      },
+      {
+        width: canvas.width,
+        height: canvas.height
+      },
+      2,
+      4
+    );
+
+    expect(new_camera_position["x"]).toBeGreaterThan(-3 * tile_size);
+    expect(new_camera_position["y"]).toBeGreaterThan(-3 * tile_size);
+  });
+
+  xit("Dows not move the camera horizontally because the battlefield is off screen", function() {
+
+  });
+
+  xit("Dows not move the camera vertically because the battlefield is off screen", function() {
+
+  });
+
 });
