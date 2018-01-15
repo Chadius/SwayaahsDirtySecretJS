@@ -243,12 +243,91 @@ describe("BattlefieldWebRender", function() {
     expect(new_camera_position["y"]).toBeGreaterThan(-3 * tile_size);
   });
 
-  xit("Dows not move the camera horizontally because the battlefield is off screen", function() {
+  it("Dows not move the camera left because the battlefield is off screen", function() {
+    new_camera_position = battlefield_web_render.get_new_camera_position(
+      {
+        xcoord: -3 * tile_size,
+        ycoord: 1.5 * tile_size
+      },
+      {
+        mouseX: 0,
+        mouseY: canvas.height / 2
+      },
+      {
+        width: canvas.width,
+        height: canvas.height
+      },
+      2,
+      4
+    );
 
+    expect(new_camera_position["x"]).toBe(-3 * tile_size);
+    expect(new_camera_position["y"]).toBe(1.5 * tile_size);
   });
 
-  xit("Dows not move the camera vertically because the battlefield is off screen", function() {
+  it("Dows not move the camera right because the battlefield is off screen", function() {
+    new_camera_position = battlefield_web_render.get_new_camera_position(
+      {
+        xcoord: 3 * tile_size,
+        ycoord: 1.5 * tile_size
+      },
+      {
+        mouseX: canvas.width,
+        mouseY: canvas.height / 2
+      },
+      {
+        width: canvas.width,
+        height: canvas.height
+      },
+      2,
+      4
+    );
 
+    expect(new_camera_position["x"]).toBe(3 * tile_size);
+    expect(new_camera_position["y"]).toBe(1.5 * tile_size);
   });
 
+  it("Dows not move the camera down because the battlefield is off screen", function() {
+    new_camera_position = battlefield_web_render.get_new_camera_position(
+      {
+        xcoord: 1.5 * tile_size,
+        ycoord: -3 * tile_size
+      },
+      {
+        mouseX: canvas.width / 2,
+        mouseY: 0
+      },
+      {
+        width: canvas.width,
+        height: canvas.height
+      },
+      2,
+      4
+    );
+
+    expect(new_camera_position["x"]).toBe(1.5 * tile_size);
+    expect(new_camera_position["y"]).toBe(-3 * tile_size);
+  });
+
+  it("Dows not move the camera down because the battlefield is off screen", function() {
+    new_camera_position = battlefield_web_render.get_new_camera_position(
+      {
+        xcoord: 1.5 * tile_size,
+        ycoord: 3 * tile_size
+      },
+      {
+        mouseX: canvas.width / 2,
+        mouseY: canvas.height
+      },
+      {
+        width: canvas.width,
+        height: canvas.height
+      },
+      2,
+      4
+    );
+
+    expect(new_camera_position["x"]).toBe(1.5 * tile_size);
+    expect(new_camera_position["y"]).toBe(3 * tile_size);
+  });
 });

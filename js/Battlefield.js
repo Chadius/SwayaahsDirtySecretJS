@@ -20,6 +20,11 @@ var battlefield = {
     3: "passthrough"
   },
 
+  camera: {
+    'xcoord': -100,
+    'ycoord': -100
+  },
+
   drawBattlefield: function() {
     //Draws all of the graphics for the battlefield.
 
@@ -29,10 +34,7 @@ var battlefield = {
     // Render the tiles.
     battlefield.renderer.drawBattlefield(
       tile_info['tile_texture'],
-      {
-        'xcoord': -100,
-        'ycoord': -100,
-      },
+      battlefield.camera,
       tile_info['size']
     );
   },
@@ -91,12 +93,12 @@ var battlefield = {
     mouseX = input_state.mouseX;
     mouseY = input_state.mouseY;
 
-    // Ask the renderer what the mouse is hovering on top of.
-
-    // Parse the return value to understand what it clicked on.
-    // For now we just need the location.
-
-    // Once we've parsed the situation, tell the web renderer what to do.
-    battlefield.renderer.update_mouse_location(mouseX, mouseY, battlefield_width, battlefield_tiles.length);
+    // Tell the renderer where the mouse is so it can update its context.
+    battlefield.renderer.update_mouse_location(
+      mouseX,
+      mouseY,
+      battlefield.battlefield_width,
+      battlefield.battlefield_tiles.length
+    );
   }
 }

@@ -304,75 +304,95 @@ var battlefield_web_render = {
 
     // Scroll camera left if needed
     original_x = new_camera_position["x"];
-    new_camera_position["x"] = battlefield_web_render.scroll_helper(
-      original_x,
+    if (battlefield_web_render.can_camera_scroll_in_direction(
+      "left",
+      new_camera_position["x"],
       screen_dimensions["width"],
-      current_mouse_location["mouseX"],
-      true,
-      0.2
-    );
-    // If you didn't scroll left, maybe scroll right
-    if (new_camera_position["x"] == original_x) {
-      new_camera_position["x"] = battlefield_web_render.scroll_helper(
+      battlefield_width,
+      battlefield_tile_count
+    )) {
+      new_camera_position["x"] = battlefield_web_render.determine_camera_scroll(
         original_x,
         screen_dimensions["width"],
         current_mouse_location["mouseX"],
-        false,
+        true,
         0.2
       );
+    }
+    // If you didn't scroll left, maybe scroll right
+    if (new_camera_position["x"] == original_x) {
+      if (battlefield_web_render.can_camera_scroll_in_direction(
+        "right",
+        new_camera_position["x"],
+        screen_dimensions["width"],
+        battlefield_width,
+        battlefield_tile_count
+      )) {
+        new_camera_position["x"] = battlefield_web_render.determine_camera_scroll(
+          original_x,
+          screen_dimensions["width"],
+          current_mouse_location["mouseX"],
+          false,
+          0.2
+        );
+      }
     }
 
     // Scroll camera up if needed
     original_y = new_camera_position["y"];
-    new_camera_position["y"] = battlefield_web_render.scroll_helper(
-      original_y,
+    if (battlefield_web_render.can_camera_scroll_in_direction(
+      "up",
+      new_camera_position["y"],
       screen_dimensions["height"],
-      current_mouse_location["mouseY"],
-      true,
-      0.2
-    );
-    // If you didn't scroll up, maybe scroll down
-    if (new_camera_position["y"] == original_y) {
-      new_camera_position["y"] = battlefield_web_render.scroll_helper(
+      battlefield_width,
+      battlefield_tile_count
+    )) {
+      new_camera_position["y"] = battlefield_web_render.determine_camera_scroll(
         original_y,
         screen_dimensions["height"],
         current_mouse_location["mouseY"],
-        false,
+        true,
         0.2
       );
     }
-
-
-    // Scroll up: If the mouse is less than 20% away from the top side
-    //  scroll the screen down.
-    can_scroll_up = true;
-    amount_past_top_margin = (screen_dimensions["height"] * 0.2) - current_mouse_location["mouseY"];
-    if (can_scroll_up && amount_past_top_margin > 0) {
-      new_camera_position["y"] -= 5;
-    }
-
-    can_scroll_down = true;
-    amount_past_bottom_margin = current_mouse_location["mouseY"] - (screen_dimensions["height"] * 0.8);
-    if (can_scroll_down && amount_past_bottom_margin > 0) {
-      new_camera_position["y"] += 5;
+    // If you didn't scroll up, maybe scroll down
+    if (battlefield_web_render.can_camera_scroll_in_direction(
+      "down",
+      new_camera_position["y"],
+      screen_dimensions["height"],
+      battlefield_width,
+      battlefield_tile_count
+    )) {
+      if (new_camera_position["y"] == original_y) {
+        new_camera_position["y"] = battlefield_web_render.determine_camera_scroll(
+          original_y,
+          screen_dimensions["height"],
+          current_mouse_location["mouseY"],
+          false,
+          0.2
+        );
+      }
     }
 
     return new_camera_position;
   },
 
-  scroll_helper: function(camera, screen_dimension, mouse,
-    scroll_if_mouse_less_than_screen, scroll_threshold) {
-    /* Helper function that indicates if the screen should scroll.
+  determine_camera_scroll: function(
+    camera,
+    screen_dimension,
+    mouse,
+    scroll_if_mouse_less_than_screen,
+    scroll_threshold
+    ) {
+    /* Helper function returns the new location the camera should be at.
     camera: camera's location.
-    screen_size: size of the screen
+    screen_dimension: size of the relevant screen dimension
     mouse: mouse's location
     scroll_if_mouse_less_than_screen: if true, the mouse value should be less
       than the screen's value to trigger the scroll.
     scroll_threshold: This number indicates the fraction of the screen_size that
       will trigger the screen scroll
     */
-    battlefield_tiles_will_scroll = true;
-
     new_camera = camera;
     amount_past_screen_margin = 0;
     if (scroll_if_mouse_less_than_screen) {
@@ -386,9 +406,72 @@ var battlefield_web_render = {
       new_camera = camera + 5;
     }
 
-    if (battlefield_tiles_will_scroll && amount_past_screen_margin > 0) {
+    if (amount_past_screen_margin > 0) {
       return new_camera;
     }
     return camera;
   },
+
+  can_camera_scroll_in_direction: function(
+    scroll_direction,
+    camera,
+    screen_dimension,
+    battlefield_width,
+    battlefield_tile_count
+  ) {
+    /*  Returns true if the camera can scroll in that direction.
+        scroll_direction: string "up" "right" "down" "left"
+        camera: camera's location on the scroll_direction's axis.
+        screen_dimension: size of the relevant screen dimension
+        battlefield_width: The maximum number of tiles on the row.
+        battlefield_tile_count: The total number of tiles in this map. Every line
+          is filled with tiles except the final one, maybe.
+    */
+
+    // Get the width and height of the map.
+    battlefield_pixel_size = battlefield_web_render.get_map_pixel_dimensions(
+      battlefield_tile_count, battlefield_width);
+
+    battlefield_pixel_width = battlefield_pixel_size["width"];
+    battlefield_pixel_height = battlefield_pixel_size["height"];
+
+    // The battlefield should have at most a 1 tile size gap.
+    // Depending on the direction, note the maximum camera direction.
+    var camera_position_threshold = 0;
+    var camera_should_be_less_than_threshold = false;
+    var tile_size = battlefield_web_render.tile_size;
+
+    switch (scroll_direction) {
+      case "up":
+        camera_position_threshold = -1 * tile_size;
+        camera_should_be_less_than_threshold = false;
+        break;
+      case "right":
+        camera_position_threshold = battlefield_pixel_width + tile_size - screen_dimension;
+        camera_should_be_less_than_threshold = true;
+        break;
+      case "down":
+        camera_position_threshold = battlefield_pixel_width + tile_size - screen_dimension;
+        camera_should_be_less_than_threshold = true;
+        break;
+      case "left":
+        camera_position_threshold = -1 * tile_size;
+        camera_should_be_less_than_threshold = false;
+        break;
+      default:
+        throw "battlefield_web_render.can_camera_scroll_in_direction: unknown direction " + scroll_direction;
+        break;
+      }
+    // Keep scrolling if the camera has not exceeded the threshold.
+    if (camera_should_be_less_than_threshold && camera < camera_position_threshold) {
+      return true;
+    }
+
+    if (!camera_should_be_less_than_threshold && camera > camera_position_threshold) {
+      return true;
+    }
+
+    // The camera is out of bounds. Stop scolling.
+    return false;
+  }
 }
