@@ -21,8 +21,8 @@ var battlefield = {
   },
 
   camera: {
-    'xcoord': -100,
-    'ycoord': -100
+    'xcoord': 0,
+    'ycoord': 0
   },
 
   drawBattlefield: function() {
@@ -88,7 +88,7 @@ var battlefield = {
     return tile_info;
   },
 
-  handleInput: function(input_state) {
+  handleInput: function(input_state, screen_dimensions) {
     /* interpret the input state. */
     mouseX = input_state.mouseX;
     mouseY = input_state.mouseY;
@@ -100,5 +100,22 @@ var battlefield = {
       battlefield.battlefield_width,
       battlefield.battlefield_tiles.length
     );
+
+    // Move the camera if necessary.
+    new_camera = battlefield.renderer.get_new_camera_position(
+      {
+        "xcoord": battlefield.camera['xcoord'],
+        "ycoord": battlefield.camera['ycoord']
+      },
+      {
+        "mouseX": mouseX,
+        "mouseY": mouseY
+      },
+      screen_dimensions,
+      battlefield.battlefield_width,
+      battlefield.battlefield_tiles.length
+    );
+    battlefield.camera['xcoord'] = new_camera['x'];
+    battlefield.camera['ycoord'] = new_camera['y'];
   }
 }

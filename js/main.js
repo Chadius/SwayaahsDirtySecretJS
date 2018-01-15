@@ -27,7 +27,13 @@ function updateAll() {
 }
 
 function moveAll() {
-  battlefield.handleInput(inputHandler);
+  battlefield.handleInput(
+    inputHandler,
+    {
+      "width": canvas.width,
+      "height": canvas.height,
+    },
+  );
   //blueCar.move();
   //greenCar.move();
 }

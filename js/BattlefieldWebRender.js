@@ -290,6 +290,7 @@ var battlefield_web_render = {
     battlefield_tile_count: The total number of tiles in this map. Every line
       is filled with tiles except the final one, maybe.
     */
+
     new_camera_position = {
       "x": current_camera_position["xcoord"],
       "y": current_camera_position["ycoord"]
@@ -297,7 +298,7 @@ var battlefield_web_render = {
 
     // Get the width and height of the map.
     battlefield_pixel_size = battlefield_web_render.get_map_pixel_dimensions(
-      battlefield_tile_count, battlefield_width);
+      battlefield_width, battlefield_tile_count);
 
     battlefield_pixel_width = battlefield_pixel_size["width"];
     battlefield_pixel_height = battlefield_pixel_size["height"];
@@ -430,7 +431,7 @@ var battlefield_web_render = {
 
     // Get the width and height of the map.
     battlefield_pixel_size = battlefield_web_render.get_map_pixel_dimensions(
-      battlefield_tile_count, battlefield_width);
+      battlefield_width, battlefield_tile_count);
 
     battlefield_pixel_width = battlefield_pixel_size["width"];
     battlefield_pixel_height = battlefield_pixel_size["height"];
@@ -447,11 +448,11 @@ var battlefield_web_render = {
         camera_should_be_less_than_threshold = false;
         break;
       case "right":
-        camera_position_threshold = battlefield_pixel_width + tile_size - screen_dimension;
+        camera_position_threshold = battlefield_pixel_width -screen_dimension - tile_size;
         camera_should_be_less_than_threshold = true;
         break;
       case "down":
-        camera_position_threshold = battlefield_pixel_width + tile_size - screen_dimension;
+        camera_position_threshold = battlefield_pixel_height - screen_dimension - tile_size;
         camera_should_be_less_than_threshold = true;
         break;
       case "left":
