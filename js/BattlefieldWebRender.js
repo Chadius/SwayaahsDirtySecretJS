@@ -150,19 +150,41 @@ var battlefield_web_render = {
     colorRect(shadowLeft, shadowTop, shadowWidth, shadowHeight, shadowColor);
   },
 
-  drawBattlefieldTiles: function(tile_drawing_information, camera_position, battlefield_size) {
+  drawBattlefieldTiles: function(tile_drawing_information, camera_position) {
     // Draws all of the given tiles on the field.
     // tile_drawing_information: A list of objects. Objects should have these keys
     //   xindex: horizontal position of tile
     //   yindex: vertical position of tile
     //   tile_image_name: nickname for the image.
     // camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
+    battlefield_web_render.genericTileDraw(
+      tile_drawing_information,
+      camera_position,
+      battlefield_web_render.drawBattlefieldTile
+    );
+  },
 
-    //Now draw the tiles.
-    image_mapping = battlefield_web_render.tile_to_image_mapping;
+  genericTileDraw: function (
+    tile_drawing_information,
+    camera_position,
+    draw_function
+  ) {
+    /* This function is designed to draw tiles.
+     tile_drawing_information: A list of objects. Objects should have these keys
+       xindex: horizontal position of tile
+       yindex: vertical position of tile
+       (Other keys can be added for the particular function)
+     camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
+     draw_function: This function will be called for each tile contained in tile_drawing_information. It will be called with:
+       xcoord: The horizontal location on screen of the left side of the tile.
+       ycoord: The vertical location on screen of the top side of the tile.
+       drawing_information: The corresponding object in tile_drawing_information
+    */
+
+    // Get the tile size
     tile_size = battlefield_web_render.tile_size;
 
-    // For each tile drawing blob
+    // For each tile
     tile_drawing_information.forEach(function(info) {
       // Convert x & y indecies to pixel based coordinates.
       xindex = info['xindex'];
@@ -179,12 +201,21 @@ var battlefield_web_render = {
         xcoord += tile_size / 2;
       }
 
-      //Get the image to draw on this tile.
-      tile_to_draw = image_mapping[info["tile_image_name"]];
-
-      //Now draw the image.
-      canvasContext.drawImage(tile_to_draw, xcoord, ycoord);
+      // Now pass this along to the draw function.
+      draw_function(xcoord, ycoord, info);
     });
+  },
+
+  drawBattlefieldTile: function(xcoord, ycoord, drawing_info) {
+    /* Draws a single tile.
+    */
+
+    //Get the image to draw on this tile.
+    image_mapping = battlefield_web_render.tile_to_image_mapping;
+    tile_to_draw = image_mapping[drawing_info["tile_image_name"]];
+
+    //Now draw the image.
+    canvasContext.drawImage(tile_to_draw, xcoord, ycoord);
   },
 
   update_mouse_location: function(mouseX, mouseY, camera_position, battlefield_width, battlefield_tile_count) {
