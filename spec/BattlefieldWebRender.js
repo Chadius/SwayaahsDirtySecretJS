@@ -144,8 +144,8 @@ describe("BattlefieldWebRender", function() {
      0,
      0,
      {
-       xcoord: 1 * tile_size,
-       ycoord: 1 * tile_size,
+       xcoord: -1 * tile_size,
+       ycoord: -1 * tile_size,
      },
      2,
      3
@@ -171,10 +171,10 @@ describe("BattlefieldWebRender", function() {
    );
 
    tileHover = battlefield_web_render.tileHover;
-   expect(tileHover["currently_hovering"]).toBe(false);
-   expect(tileHover["row"]).toBe(-1);
-   expect(tileHover["column"]).toBe(-1);
-   expect(tileHover["index"]).toBe(-1);
+   expect(tileHover["currently_hovering"]).toBe(true);
+   expect(tileHover["row"]).toBe(1);
+   expect(tileHover["column"]).toBe(0);
+   expect(tileHover["index"]).toBe(2);
   });
 
   it("Moves the camera horizontally", function() {
@@ -243,7 +243,7 @@ describe("BattlefieldWebRender", function() {
     expect(new_camera_position["y"]).toBeGreaterThan(-3 * tile_size);
   });
 
-  it("Dows not move the camera left because the battlefield is off screen", function() {
+  it("Does not move the camera left because the battlefield is off screen", function() {
     new_camera_position = battlefield_web_render.get_new_camera_position(
       {
         xcoord: -3 * tile_size,
@@ -265,7 +265,7 @@ describe("BattlefieldWebRender", function() {
     expect(new_camera_position["y"]).toBe(1.5 * tile_size);
   });
 
-  it("Dows not move the camera right because the battlefield is off screen", function() {
+  it("does not move the camera right because the battlefield is off screen", function() {
     new_camera_position = battlefield_web_render.get_new_camera_position(
       {
         xcoord: 3 * tile_size,
@@ -287,7 +287,7 @@ describe("BattlefieldWebRender", function() {
     expect(new_camera_position["y"]).toBe(1.5 * tile_size);
   });
 
-  it("Dows not move the camera down because the battlefield is off screen", function() {
+  it("does not move the camera down because the battlefield is off screen", function() {
     new_camera_position = battlefield_web_render.get_new_camera_position(
       {
         xcoord: 1.5 * tile_size,
@@ -309,7 +309,7 @@ describe("BattlefieldWebRender", function() {
     expect(new_camera_position["y"]).toBe(-3 * tile_size);
   });
 
-  it("Dows not move the camera down because the battlefield is off screen", function() {
+  it("does not move the camera down because the battlefield is off screen", function() {
     new_camera_position = battlefield_web_render.get_new_camera_position(
       {
         xcoord: 1.5 * tile_size,
