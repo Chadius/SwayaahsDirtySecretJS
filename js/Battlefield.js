@@ -37,6 +37,11 @@ var battlefield = {
       battlefield.camera,
       tile_info['size']
     );
+
+    // Draw the tile the mouse is hovering over.
+    battlefield.renderer.drawHighlightedTiles(
+      battlefield.camera
+    );
   },
 
   getTerrainTileInfo: function() {
@@ -97,6 +102,7 @@ var battlefield = {
     battlefield.renderer.update_mouse_location(
       mouseX,
       mouseY,
+      battlefield.camera,
       battlefield.battlefield_width,
       battlefield.battlefield_tiles.length
     );

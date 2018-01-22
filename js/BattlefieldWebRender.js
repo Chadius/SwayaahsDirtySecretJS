@@ -218,7 +218,13 @@ var battlefield_web_render = {
     canvasContext.drawImage(tile_to_draw, xcoord, ycoord);
   },
 
-  update_mouse_location: function(mouseX, mouseY, camera_position, battlefield_width, battlefield_tile_count) {
+  update_mouse_location: function(
+    mouseX,
+    mouseY,
+    camera_position,
+    battlefield_width,
+    battlefield_tile_count
+  ) {
     battlefield_web_render.mouseLocation = {
       "mouseX": mouseX,
       "mouseY": mouseY
@@ -233,12 +239,12 @@ var battlefield_web_render = {
 
     // Which tile is the mouse hovering over?
     // First figure out if it's on the battlefield.
-    mouseFieldX = mouseX - camera_position.xcoord;
-    mouseFieldY = mouseY - camera_position.ycoord;
+    mouseFieldX = mouseX + camera_position.xcoord;
+    mouseFieldY = mouseY + camera_position.ycoord;
 
     // Get the battlefield dimensions.
     battlefield_pixel_size = battlefield_web_render.get_map_pixel_dimensions(
-      battlefield_tile_count, battlefield_width);
+      battlefield_width, battlefield_tile_count);
 
     battlefield_pixel_width = battlefield_pixel_size["width"];
     battlefield_pixel_height = battlefield_pixel_size["height"];
@@ -415,7 +421,7 @@ var battlefield_web_render = {
     mouse,
     scroll_if_mouse_less_than_screen,
     scroll_threshold
-    ) {
+  ) {
     /* Helper function returns the new location the camera should be at.
     camera: camera's location.
     screen_dimension: size of the relevant screen dimension
@@ -505,5 +511,40 @@ var battlefield_web_render = {
 
     // The camera is out of bounds. Stop scolling.
     return false;
-  }
+  },
+
+  drawHighlightedTiles: function(
+    camera_position
+  ) {
+    /*
+    Draws all of the highlighted tiles on the battlefield.
+    // camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
+    */
+
+    tile_drawing_information = [];
+
+    // Add the hover tile if needed
+    if (battlefield_web_render.tileHover["currently_hovering"]) {
+      tile_drawing_information.push({
+        'xindex': battlefield_web_render.tileHover["column"],
+        'yindex': battlefield_web_render.tileHover["row"]
+      });
+    }
+
+    battlefield_web_render.genericTileDraw(
+      tile_drawing_information,
+      camera_position,
+      battlefield_web_render.drawHoverTile
+    );
+  },
+
+  drawHoverTile: function(xcoord, ycoord, drawing_info) {
+    /* Draws an outline around the tile the selector is hovering over.
+    */
+
+    tile_size = battlefield_web_render.tile_size;
+    var highlight_color = "hsl(350, 10%, 15%)";
+    colorStrokeRect(xcoord, ycoord, tile_size, tile_size, highlight_color);
+  },
+
 }
