@@ -177,6 +177,25 @@ describe("BattlefieldWebRender", function() {
    expect(tileHover["index"]).toBe(2);
   });
 
+  it("doesn't hover the offset tile", function() {
+    battlefield_web_render.update_mouse_location(
+     0,
+     1.5 * tile_size,
+     {
+       xcoord: 0,
+       ycoord: 0,
+     },
+     2,
+     3
+   );
+
+   tileHover = battlefield_web_render.tileHover;
+   expect(tileHover["currently_hovering"]).toBe(false);
+   expect(tileHover["row"]).toBe(-1);
+   expect(tileHover["column"]).toBe(-1);
+   expect(tileHover["index"]).toBe(-1);
+  });
+
   it("Moves the camera horizontally", function() {
     new_camera_position = battlefield_web_render.get_new_camera_position(
       {

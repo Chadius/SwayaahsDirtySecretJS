@@ -264,10 +264,11 @@ var battlefield_web_render = {
     else {
       // Determine which row the cursor is on.
       tile_row = Math.floor(mouseFieldY / tile_size);
-      // This is a hex grid, so every other row has an offset.
+
       // Now determine the column.
       tile_column = Math.floor(mouseFieldX / tile_size);
 
+      // This is a hex grid, so every other row has an offset.
       if (tile_row % 2 == 1) {
         tile_column = Math.floor((mouseFieldX - half_tile_size) / tile_size);
       }
@@ -276,7 +277,11 @@ var battlefield_web_render = {
       tile_index = (tile_row * battlefield_width) + tile_column;
 
       // If the given tile doesn't exist, the tile isn't hovering.
-      if (tile_index >= battlefield_tile_count) {
+      if (
+        tile_index >= battlefield_tile_count
+        || tile_column < 0
+        || tile_row < 0
+      ) {
         battlefield_web_render.tileHover = {
           "currently_hovering": false,
           "column": -1,
