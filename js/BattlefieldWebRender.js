@@ -519,11 +519,13 @@ var battlefield_web_render = {
   },
 
   drawHighlightedTiles: function(
-    camera_position
+    camera_position,
+    start_date
   ) {
     /*
     Draws all of the highlighted tiles on the battlefield.
-    // camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
+      camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
+      start_date: Date object.
     */
 
     tile_drawing_information = [];
@@ -532,7 +534,8 @@ var battlefield_web_render = {
     if (battlefield_web_render.tileHover["currently_hovering"]) {
       tile_drawing_information.push({
         'xindex': battlefield_web_render.tileHover["column"],
-        'yindex': battlefield_web_render.tileHover["row"]
+        'yindex': battlefield_web_render.tileHover["row"],
+        'start_date': start_date
       });
     }
 
@@ -545,10 +548,23 @@ var battlefield_web_render = {
 
   drawHoverTile: function(xcoord, ycoord, drawing_info) {
     /* Draws an outline around the tile the selector is hovering over.
-    */
 
+    drawing_info must have these key/value pairs:
+      start_date: Date object.
+    */
     tile_size = battlefield_web_render.tile_size;
-    var highlight_color = "hsl(350, 10%, 15%)";
+    start_date = drawing_info['start_date'];
+
+    // Vary the light level based on the number of milliseconds that passed.
+    now = new Date();
+    elapsed_milliseconds = now - start_date;
+    light_level = '15%';
+    if (isNaN(elapsed_milliseconds) == false) {
+      light_level = (elapsed_milliseconds % 1000) / 10;
+      light_level = light_level + "%";
+    }
+
+    var highlight_color = "hsl(350, 80%, " + light_level + ")";
     colorStrokeRect(xcoord, ycoord, tile_size, tile_size, highlight_color);
   },
 

@@ -13,6 +13,8 @@ var battlefield = {
 
   renderer: null,
 
+  start_date: null,
+
   tile_code_to_nickname: {
     0: "wall",
     1: "single",
@@ -40,7 +42,8 @@ var battlefield = {
 
     // Draw the tile the mouse is hovering over.
     battlefield.renderer.drawHighlightedTiles(
-      battlefield.camera
+      battlefield.camera,
+      battlefield.start_time
     );
   },
 

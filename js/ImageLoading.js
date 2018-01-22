@@ -6,6 +6,7 @@ function loadImages() {
 
   // Set up the graphics renderer.
   battlefield.renderer = battlefield_web_render;
+  battlefield.start_time = new Date();
   battlefield_web_render.screen_dimensions = {'width':800, 'height':600};
 
   image_loading.objects_currently_loading_images_count = objects_loading_images.length;
