@@ -242,7 +242,7 @@ describe("BattlefieldWebRender", function() {
   });
 
   it("Moves the camera horizontally", function() {
-    new_camera_position = battlefield_web_render.get_new_camera_position(
+    new_camera_position = battlefield_web_render.getNewCameraPosition(
       {
         xcoord: tile_size,
         ycoord: tile_size
@@ -264,7 +264,7 @@ describe("BattlefieldWebRender", function() {
   });
 
   it("Moves the camera vertically", function() {
-    new_camera_position = battlefield_web_render.get_new_camera_position(
+    new_camera_position = battlefield_web_render.getNewCameraPosition(
       {
         xcoord: tile_size,
         ycoord: tile_size
@@ -286,7 +286,7 @@ describe("BattlefieldWebRender", function() {
   });
 
   it("Moves the camera diagonally", function() {
-    new_camera_position = battlefield_web_render.get_new_camera_position(
+    new_camera_position = battlefield_web_render.getNewCameraPosition(
       {
         xcoord: -3 * tile_size,
         ycoord: -3 * tile_size
@@ -308,7 +308,7 @@ describe("BattlefieldWebRender", function() {
   });
 
   it("Does not move the camera left because the battlefield is off screen", function() {
-    new_camera_position = battlefield_web_render.get_new_camera_position(
+    new_camera_position = battlefield_web_render.getNewCameraPosition(
       {
         xcoord: -3 * tile_size,
         ycoord: 1.5 * tile_size
@@ -330,7 +330,7 @@ describe("BattlefieldWebRender", function() {
   });
 
   it("does not move the camera right because the battlefield is off screen", function() {
-    new_camera_position = battlefield_web_render.get_new_camera_position(
+    new_camera_position = battlefield_web_render.getNewCameraPosition(
       {
         xcoord: 3 * tile_size,
         ycoord: 1.5 * tile_size
@@ -352,7 +352,7 @@ describe("BattlefieldWebRender", function() {
   });
 
   it("does not move the camera down because the battlefield is off screen", function() {
-    new_camera_position = battlefield_web_render.get_new_camera_position(
+    new_camera_position = battlefield_web_render.getNewCameraPosition(
       {
         xcoord: 1.5 * tile_size,
         ycoord: -3 * tile_size
@@ -374,7 +374,7 @@ describe("BattlefieldWebRender", function() {
   });
 
   it("does not move the camera down because the battlefield is off screen", function() {
-    new_camera_position = battlefield_web_render.get_new_camera_position(
+    new_camera_position = battlefield_web_render.getNewCameraPosition(
       {
         xcoord: 1.5 * tile_size,
         ycoord: 3 * tile_size

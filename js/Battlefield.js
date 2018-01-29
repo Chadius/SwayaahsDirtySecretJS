@@ -116,7 +116,7 @@ var battlefield = {
     );
 
     // Move the camera if necessary.
-    new_camera = battlefield.renderer.get_new_camera_position(
+    new_camera = battlefield.renderer.getNewCameraPosition(
       {
         "xcoord": battlefield.camera['xcoord'],
         "ycoord": battlefield.camera['ycoord']
