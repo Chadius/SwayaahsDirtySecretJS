@@ -97,13 +97,13 @@ var battlefield_web_render = {
     // camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
     // battlefield_size: An object that has the width and height of the battlefield (in tiles)
 
-    battlefield_web_render.drawBattlefieldBackground();
+    battlefield_web_render._drawBattlefieldBackground();
 
     // Draw the battlefield shadow.
-    battlefield_web_render.drawBattlefieldShadow(camera_position, battlefield_size);
+    battlefield_web_render._drawBattlefieldShadow(camera_position, battlefield_size);
 
     // Now Draw the tiles.
-    battlefield_web_render.drawBattlefieldTiles(tile_drawing_information, camera_position);
+    battlefield_web_render._drawBattlefieldTiles(tile_drawing_information, camera_position);
 
     // Draw the mouse coordinates.
     mouseX = battlefield_web_render.mouse_location["mouseX"];
@@ -111,7 +111,7 @@ var battlefield_web_render = {
     colorText("("+ mouseX + ", "+ mouseY +")", canvas.width - 100, canvas.height * 0.95, "hsl(0,100%,100%)");
   },
 
-  drawBattlefieldBackground: function() {
+  _drawBattlefieldBackground: function() {
     // Draws the background.
     var background_color = "hsl(288, 10%, 15%)";
     colorRect(
@@ -123,7 +123,7 @@ var battlefield_web_render = {
     );
   },
 
-  drawBattlefieldShadow: function(camera_position, battlefield_size) {
+  _drawBattlefieldShadow: function(camera_position, battlefield_size) {
     // Draws a shadow that the battlefield will be contained within.
     // camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
     // battlefield_size: An object that has the width and height of the battlefield (in tiles)
@@ -150,21 +150,21 @@ var battlefield_web_render = {
     colorRect(shadow_left, shadow_top, shadow_width, shadow_height, shadow_color);
   },
 
-  drawBattlefieldTiles: function(tile_drawing_information, camera_position) {
+  _drawBattlefieldTiles: function(tile_drawing_information, camera_position) {
     // Draws all of the given tiles on the field.
     // tile_drawing_information: A list of objects. Objects should have these keys
     //   xindex: horizontal position of tile
     //   yindex: vertical position of tile
     //   tile_image_name: nickname for the image.
     // camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
-    battlefield_web_render.genericTileDraw(
+    battlefield_web_render._genericTileDraw(
       tile_drawing_information,
       camera_position,
-      battlefield_web_render.drawBattlefieldTile
+      battlefield_web_render._drawSingleBattlefieldTile
     );
   },
 
-  genericTileDraw: function (
+  _genericTileDraw: function (
     tile_drawing_information,
     camera_position,
     draw_function
@@ -206,7 +206,7 @@ var battlefield_web_render = {
     });
   },
 
-  drawBattlefieldTile: function(xcoord, ycoord, drawing_info) {
+  _drawSingleBattlefieldTile: function(xcoord, ycoord, drawing_info) {
     /* Draws a single tile.
     */
 
@@ -215,7 +215,7 @@ var battlefield_web_render = {
     tile_to_draw = image_mapping[drawing_info["tile_image_name"]];
 
     //Now draw the image.
-    canvasContext.drawImage(tile_to_draw, xcoord, ycoord);
+    canvas_context.drawImage(tile_to_draw, xcoord, ycoord);
   },
 
   updateMouseLocation: function(
@@ -252,7 +252,7 @@ var battlefield_web_render = {
     mouse_field_y = mouseY + camera_position.ycoord;
 
     // Get the battlefield dimensions.
-    battlefield_pixel_size = battlefield_web_render.getMapPixelDimensions(
+    battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
       battlefield_width, battlefield_tile_count);
 
     battlefield_pixel_width = battlefield_pixel_size["width"];
@@ -310,7 +310,7 @@ var battlefield_web_render = {
     }
   },
 
-  getMapPixelDimensions: function(battlefield_width, battlefield_tile_count) {
+  _getMapPixelDimensions: function(battlefield_width, battlefield_tile_count) {
     /*
       Returns an object with "width" and "height" keys representing
       the size of the map in pixels.
@@ -348,7 +348,7 @@ var battlefield_web_render = {
     };
 
     // Get the width and height of the map.
-    battlefield_pixel_size = battlefield_web_render.getMapPixelDimensions(
+    battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
       battlefield_width, battlefield_tile_count);
 
     battlefield_pixel_width = battlefield_pixel_size["width"];
@@ -356,14 +356,14 @@ var battlefield_web_render = {
 
     // Scroll camera left if needed
     original_x = new_camera_position["x"];
-    if (battlefield_web_render.canCameraScrollInDirection(
+    if (battlefield_web_render._canCameraScrollInDirection(
       "left",
       new_camera_position["x"],
       screen_dimensions["width"],
       battlefield_width,
       battlefield_tile_count
     )) {
-      new_camera_position["x"] = battlefield_web_render.determineCameraScroll(
+      new_camera_position["x"] = battlefield_web_render._determineCameraScroll(
         original_x,
         screen_dimensions["width"],
         current_mouse_location["mouseX"],
@@ -373,14 +373,14 @@ var battlefield_web_render = {
     }
     // If you didn't scroll left, maybe scroll right
     if (new_camera_position["x"] == original_x) {
-      if (battlefield_web_render.canCameraScrollInDirection(
+      if (battlefield_web_render._canCameraScrollInDirection(
         "right",
         new_camera_position["x"],
         screen_dimensions["width"],
         battlefield_width,
         battlefield_tile_count
       )) {
-        new_camera_position["x"] = battlefield_web_render.determineCameraScroll(
+        new_camera_position["x"] = battlefield_web_render._determineCameraScroll(
           original_x,
           screen_dimensions["width"],
           current_mouse_location["mouseX"],
@@ -392,14 +392,14 @@ var battlefield_web_render = {
 
     // Scroll camera up if needed
     original_y = new_camera_position["y"];
-    if (battlefield_web_render.canCameraScrollInDirection(
+    if (battlefield_web_render._canCameraScrollInDirection(
       "up",
       new_camera_position["y"],
       screen_dimensions["height"],
       battlefield_width,
       battlefield_tile_count
     )) {
-      new_camera_position["y"] = battlefield_web_render.determineCameraScroll(
+      new_camera_position["y"] = battlefield_web_render._determineCameraScroll(
         original_y,
         screen_dimensions["height"],
         current_mouse_location["mouseY"],
@@ -408,7 +408,7 @@ var battlefield_web_render = {
       );
     }
     // If you didn't scroll up, maybe scroll down
-    if (battlefield_web_render.canCameraScrollInDirection(
+    if (battlefield_web_render._canCameraScrollInDirection(
       "down",
       new_camera_position["y"],
       screen_dimensions["height"],
@@ -416,7 +416,7 @@ var battlefield_web_render = {
       battlefield_tile_count
     )) {
       if (new_camera_position["y"] == original_y) {
-        new_camera_position["y"] = battlefield_web_render.determineCameraScroll(
+        new_camera_position["y"] = battlefield_web_render._determineCameraScroll(
           original_y,
           screen_dimensions["height"],
           current_mouse_location["mouseY"],
@@ -429,7 +429,7 @@ var battlefield_web_render = {
     return new_camera_position;
   },
 
-  determineCameraScroll: function(
+  _determineCameraScroll: function(
     camera,
     screen_dimension,
     mouse,
@@ -464,7 +464,7 @@ var battlefield_web_render = {
     return camera;
   },
 
-  canCameraScrollInDirection: function(
+  _canCameraScrollInDirection: function(
     scroll_direction,
     camera,
     screen_dimension,
@@ -481,7 +481,7 @@ var battlefield_web_render = {
     */
 
     // Get the width and height of the map.
-    battlefield_pixel_size = battlefield_web_render.getMapPixelDimensions(
+    battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
       battlefield_width, battlefield_tile_count);
 
     battlefield_pixel_width = battlefield_pixel_size["width"];
@@ -511,7 +511,7 @@ var battlefield_web_render = {
         camera_should_be_less_than_threshold = false;
         break;
       default:
-        throw "battlefield_web_render.canCameraScrollInDirection: unknown direction " + scroll_direction;
+        throw "battlefield_web_render._canCameraScrollInDirection: unknown direction " + scroll_direction;
         break;
       }
     // Keep scrolling if the camera has not exceeded the threshold.
@@ -548,14 +548,14 @@ var battlefield_web_render = {
       });
     }
 
-    battlefield_web_render.genericTileDraw(
+    battlefield_web_render._genericTileDraw(
       tile_drawing_information,
       camera_position,
-      battlefield_web_render.drawHoverTile
+      battlefield_web_render._drawHoverTile
     );
   },
 
-  drawHoverTile: function(xcoord, ycoord, drawing_info) {
+  _drawHoverTile: function(xcoord, ycoord, drawing_info) {
     /* Draws an outline around the tile the selector is hovering over.
 
     drawing_info must have these key/value pairs:

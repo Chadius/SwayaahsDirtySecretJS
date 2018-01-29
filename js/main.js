@@ -1,9 +1,9 @@
 window.onload = function() {
   canvas = document.getElementById('gameCanvas');
-  canvasContext = canvas.getContext('2d');
+  canvas_context = canvas.getContext('2d');
 
-  var backgroundColor = "hsl(288, 10%, 15%)";
-  colorRect(0,0,canvas.width,canvas.height, backgroundColor);
+  var background_color = "hsl(288, 10%, 15%)";
+  colorRect(0,0,canvas.width,canvas.height, background_color);
   colorText("Loading images", canvas.width/2, canvas.height/2, "white");
 
   loadImages();

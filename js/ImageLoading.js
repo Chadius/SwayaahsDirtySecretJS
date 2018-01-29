@@ -31,30 +31,30 @@ var image_loading = {
       filename = nickname_filename.the_file;
 
       new_img = document.createElement("img");
-      image_loading.beginLoadingImage(new_img, filename, counting_object);
+      image_loading._beginLoadingImage(new_img, filename, counting_object);
       name_to_images[nickname] = new_img;
     });
 
     return name_to_images;
   },
 
-  beginLoadingImage: function(img_object, filename, counting_object) {
+  _beginLoadingImage: function(img_object, filename, counting_object) {
     // Load the image, leaving a callback if it doesn't load properly.
-    img_object.onload = () => {image_loading.decrementPendingImageCount(counting_object);}
+    img_object.onload = () => {image_loading._decrementPendingImageCount(counting_object);}
     img_object.src = "images/" + filename;
   },
 
-  decrementPendingImageCount: function(counting_object) {
+  _decrementPendingImageCount: function(counting_object) {
     // A required image has loaded. Note this and set the complete variable to true if it's done.
     counting_object.pending_required_images_count --;
     if (counting_object.pending_required_images_count == 0) {
       // All of the pending images have finished loading.
       counting_object.finished_loading_images = true;
-      image_loading.objectFinishedLoadingStartIfReady();
+      image_loading._objectFinishedLoadingStartIfReady();
     }
   },
 
-  objectFinishedLoadingStartIfReady: function () {
+  _objectFinishedLoadingStartIfReady: function () {
     // An object has finished loading all of its required images.
     image_loading.objects_currently_loading_images_count --;
     if (image_loading.objects_currently_loading_images_count == 0) {
