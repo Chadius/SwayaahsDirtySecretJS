@@ -27,8 +27,8 @@ var image_loading = {
 
     counting_object.pending_required_images_count = name_to_file_mapping.length;
     name_to_file_mapping.forEach(function(nickname_filename){
-      nickname = nickname_filename.varName;
-      filename = nickname_filename.theFile;
+      nickname = nickname_filename.var_name;
+      filename = nickname_filename.the_file;
 
       new_img = document.createElement("img");
       image_loading.beginLoadingImage(new_img, filename, counting_object);

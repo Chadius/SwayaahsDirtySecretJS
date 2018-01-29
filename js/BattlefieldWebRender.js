@@ -49,12 +49,12 @@ var battlefield_web_render = {
     }
   },
 
-  mouseLocation: {
+  mouse_location: {
     "mouseX": -1,
     "mouseY": -1
   },
 
-  tileHover: {
+  tile_hover: {
     "currently_hovering": false,
     "column": -1,
     "row": -1,
@@ -64,15 +64,15 @@ var battlefield_web_render = {
   loadRequiredImages: function() {
     // These are images that MUST be loaded before displaying anything to the user.
     var name_to_file_mapping = [];
-    var tileSet = ["single", "double", "passthrough", "wall"];
+    var tile_set = ["single", "double", "passthrough", "wall"];
 
     // For the tileset, associate the image filename to the each tile.
-    tileSet.forEach(function(tilename){
-      varName = tilename;
-      theFile = battlefield_web_render.tile_image_database[tilename].filename;
+    tile_set.forEach(function(tilename){
+      var_name = tilename;
+      the_file = battlefield_web_render.tile_image_database[tilename].filename;
 
       name_to_file_mapping.push(
-        {varName: varName, theFile: theFile}
+        {var_name: var_name, the_file: the_file}
       );
     });
 
@@ -83,7 +83,7 @@ var battlefield_web_render = {
     );
 
     // Associate the loaded images to each tile.
-    tileSet.forEach(function(tilename){
+    tile_set.forEach(function(tilename){
       tile_to_image_mapping_key = battlefield_web_render.tile_image_database[tilename].tile_to_image_mapping_key;
       nickname = battlefield_web_render.tile_image_database[tilename].nickname;
 
@@ -106,20 +106,20 @@ var battlefield_web_render = {
     battlefield_web_render.drawBattlefieldTiles(tile_drawing_information, camera_position);
 
     // Draw the mouse coordinates.
-    mouseX = battlefield_web_render.mouseLocation["mouseX"];
-    mouseY = battlefield_web_render.mouseLocation["mouseY"];
+    mouseX = battlefield_web_render.mouse_location["mouseX"];
+    mouseY = battlefield_web_render.mouse_location["mouseY"];
     colorText("("+ mouseX + ", "+ mouseY +")", canvas.width - 100, canvas.height * 0.95, "hsl(0,100%,100%)");
   },
 
   drawBattlefieldBackground: function() {
     // Draws the background.
-    var backgroundColor = "hsl(288, 10%, 15%)";
+    var background_color = "hsl(288, 10%, 15%)";
     colorRect(
       0,
       0,
       battlefield_web_render.screen_dimensions.width,
       battlefield_web_render.screen_dimensions.height,
-      backgroundColor
+      background_color
     );
   },
 
@@ -133,21 +133,21 @@ var battlefield_web_render = {
     half_tile_size = 0.5 * battlefield_web_render.tile_size;
 
     // The upperleft corner of the shadow should be half a tile back.
-    shadowLeft = 0 - camera_position.xcoord - half_tile_size;
-    shadowTop = 0 - camera_position.ycoord - half_tile_size;
+    shadow_left = 0 - camera_position.xcoord - half_tile_size;
+    shadow_top = 0 - camera_position.ycoord - half_tile_size;
 
     // The width should be one tile width away from the right most tile.
     // This is a hex grid, so even rows are pushed half a tile outward.
-    shadowWidth = battlefield_size['width'] * tile_size + tile_size + half_tile_size;
+    shadow_width = battlefield_size['width'] * tile_size + tile_size + half_tile_size;
 
     // The height of the shadow should be one tile height more than the battlefield's height.
-    shadowHeight = battlefield_size['height'] * tile_size + tile_size;
+    shadow_height = battlefield_size['height'] * tile_size + tile_size;
 
     // Get the color for the shadow- A transparent black.
-    var shadowColor = "hsla(288, 0%, 50%, 0.5)";
+    var shadow_color = "hsla(288, 0%, 50%, 0.5)";
 
     // Draw a shadow for the battlefield.
-    colorRect(shadowLeft, shadowTop, shadowWidth, shadowHeight, shadowColor);
+    colorRect(shadow_left, shadow_top, shadow_width, shadow_height, shadow_color);
   },
 
   drawBattlefieldTiles: function(tile_drawing_information, camera_position) {
@@ -234,12 +234,12 @@ var battlefield_web_render = {
     battlefield_width:
     battlefield_tiles:
     */
-    battlefield_web_render.mouseLocation = {
+    battlefield_web_render.mouse_location = {
       "mouseX": mouseX,
       "mouseY": mouseY
     };
 
-    battlefield_web_render.tileHover = {
+    battlefield_web_render.tile_hover = {
       "currently_hovering": false,
       "column": -1,
       "row": -1,
@@ -248,8 +248,8 @@ var battlefield_web_render = {
 
     // Which tile is the mouse hovering over?
     // First figure out if it's on the battlefield.
-    mouseFieldX = mouseX + camera_position.xcoord;
-    mouseFieldY = mouseY + camera_position.ycoord;
+    mouse_field_x = mouseX + camera_position.xcoord;
+    mouse_field_y = mouseY + camera_position.ycoord;
 
     // Get the battlefield dimensions.
     battlefield_pixel_size = battlefield_web_render.getMapPixelDimensions(
@@ -259,11 +259,11 @@ var battlefield_web_render = {
     battlefield_pixel_height = battlefield_pixel_size["height"];
 
     // If it isn't on the field, then it's not hovering.
-    not_on_horizontal = (mouseFieldX < 0 || mouseFieldX > battlefield_pixel_width);
-    not_on_vertical = (mouseFieldY < 0 || mouseFieldY > battlefield_pixel_height);
+    not_on_horizontal = (mouse_field_x < 0 || mouse_field_x > battlefield_pixel_width);
+    not_on_vertical = (mouse_field_y < 0 || mouse_field_y > battlefield_pixel_height);
 
     if (not_on_vertical || not_on_horizontal) {
-      battlefield_web_render.tileHover = {
+      battlefield_web_render.tile_hover = {
         "currently_hovering": false,
         "column": -1,
         "row": -1,
@@ -272,14 +272,14 @@ var battlefield_web_render = {
     }
     else {
       // Determine which row the cursor is on.
-      tile_row = Math.floor(mouseFieldY / tile_size);
+      tile_row = Math.floor(mouse_field_y / tile_size);
 
       // Now determine the column.
-      tile_column = Math.floor(mouseFieldX / tile_size);
+      tile_column = Math.floor(mouse_field_x / tile_size);
 
       // This is a hex grid, so every other row has an offset.
       if (tile_row % 2 == 1) {
-        tile_column = Math.floor((mouseFieldX - half_tile_size) / tile_size);
+        tile_column = Math.floor((mouse_field_x - half_tile_size) / tile_size);
       }
 
       // Get the index.
@@ -291,7 +291,7 @@ var battlefield_web_render = {
         || tile_column < 0
         || tile_row < 0
       ) {
-        battlefield_web_render.tileHover = {
+        battlefield_web_render.tile_hover = {
           "currently_hovering": false,
           "column": -1,
           "row": -1,
@@ -300,7 +300,7 @@ var battlefield_web_render = {
       }
       else {
         // Update the variable.
-        battlefield_web_render.tileHover = {
+        battlefield_web_render.tile_hover = {
           "currently_hovering": true,
           "column": tile_column,
           "row": tile_row,
@@ -540,10 +540,10 @@ var battlefield_web_render = {
     tile_drawing_information = [];
 
     // Add the hover tile if needed
-    if (battlefield_web_render.tileHover["currently_hovering"]) {
+    if (battlefield_web_render.tile_hover["currently_hovering"]) {
       tile_drawing_information.push({
-        'xindex': battlefield_web_render.tileHover["column"],
-        'yindex': battlefield_web_render.tileHover["row"],
+        'xindex': battlefield_web_render.tile_hover["column"],
+        'yindex': battlefield_web_render.tile_hover["row"],
         'start_date': start_date
       });
     }

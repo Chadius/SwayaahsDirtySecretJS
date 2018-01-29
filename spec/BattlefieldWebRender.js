@@ -17,7 +17,7 @@ describe("BattlefieldWebRender", function() {
       width: tile_size * 3,
       height: tile_size * 3,
     };
-    battlefield_web_render.tileHover = {
+    battlefield_web_render.tile_hover = {
       "currently_hovering": false,
       "column": -1,
       "row": -1,
@@ -42,11 +42,11 @@ describe("BattlefieldWebRender", function() {
       1
     );
 
-    tileHover = battlefield_web_render.tileHover;
-    expect(tileHover["currently_hovering"]).toBe(true);
-    expect(tileHover["row"]).toBe(0);
-    expect(tileHover["column"]).toBe(0);
-    expect(tileHover["index"]).toBe(0);
+    tile_hover = battlefield_web_render.tile_hover;
+    expect(tile_hover["currently_hovering"]).toBe(true);
+    expect(tile_hover["row"]).toBe(0);
+    expect(tile_hover["column"]).toBe(0);
+    expect(tile_hover["index"]).toBe(0);
   });
 
   it("indicates tile 1 when mouse points at 2nd tile", function() {
@@ -66,11 +66,11 @@ describe("BattlefieldWebRender", function() {
      3
    );
 
-   tileHover = battlefield_web_render.tileHover;
-   expect(tileHover["currently_hovering"]).toBe(true);
-   expect(tileHover["row"]).toBe(0);
-   expect(tileHover["column"]).toBe(1);
-   expect(tileHover["index"]).toBe(1);
+   tile_hover = battlefield_web_render.tile_hover;
+   expect(tile_hover["currently_hovering"]).toBe(true);
+   expect(tile_hover["row"]).toBe(0);
+   expect(tile_hover["column"]).toBe(1);
+   expect(tile_hover["index"]).toBe(1);
   });
 
   it("indicates row 1 when mouse points at 2nd row", function() {
@@ -90,11 +90,11 @@ describe("BattlefieldWebRender", function() {
      3
    );
 
-   tileHover = battlefield_web_render.tileHover;
-   expect(tileHover["currently_hovering"]).toBe(true);
-   expect(tileHover["row"]).toBe(1);
-   expect(tileHover["column"]).toBe(0);
-   expect(tileHover["index"]).toBe(2);
+   tile_hover = battlefield_web_render.tile_hover;
+   expect(tile_hover["currently_hovering"]).toBe(true);
+   expect(tile_hover["row"]).toBe(1);
+   expect(tile_hover["column"]).toBe(0);
+   expect(tile_hover["index"]).toBe(2);
   });
 
   it("indicates no tiles when mouse points at no tile on the bottom row", function() {
@@ -114,11 +114,11 @@ describe("BattlefieldWebRender", function() {
      3
    );
 
-   tileHover = battlefield_web_render.tileHover;
-   expect(tileHover["currently_hovering"]).toBe(false);
-   expect(tileHover["row"]).toBe(-1);
-   expect(tileHover["column"]).toBe(-1);
-   expect(tileHover["index"]).toBe(-1);
+   tile_hover = battlefield_web_render.tile_hover;
+   expect(tile_hover["currently_hovering"]).toBe(false);
+   expect(tile_hover["row"]).toBe(-1);
+   expect(tile_hover["column"]).toBe(-1);
+   expect(tile_hover["index"]).toBe(-1);
   });
 
   it("indicates no tiles when mouse points off of the battlefield", function() {
@@ -138,11 +138,11 @@ describe("BattlefieldWebRender", function() {
      1
    );
 
-   tileHover = battlefield_web_render.tileHover;
-   expect(tileHover["currently_hovering"]).toBe(false);
-   expect(tileHover["row"]).toBe(-1);
-   expect(tileHover["column"]).toBe(-1);
-   expect(tileHover["index"]).toBe(-1);
+   tile_hover = battlefield_web_render.tile_hover;
+   expect(tile_hover["currently_hovering"]).toBe(false);
+   expect(tile_hover["row"]).toBe(-1);
+   expect(tile_hover["column"]).toBe(-1);
+   expect(tile_hover["index"]).toBe(-1);
   });
 
   it("indicates no tiles when mouse points in offset space on second row", function() {
@@ -162,11 +162,11 @@ describe("BattlefieldWebRender", function() {
      1
    );
 
-   tileHover = battlefield_web_render.tileHover;
-   expect(tileHover["currently_hovering"]).toBe(false);
-   expect(tileHover["row"]).toBe(-1);
-   expect(tileHover["column"]).toBe(-1);
-   expect(tileHover["index"]).toBe(-1);
+   tile_hover = battlefield_web_render.tile_hover;
+   expect(tile_hover["currently_hovering"]).toBe(false);
+   expect(tile_hover["row"]).toBe(-1);
+   expect(tile_hover["column"]).toBe(-1);
+   expect(tile_hover["index"]).toBe(-1);
   });
 
   it("indicates no tiles when camera scrolls mouse off of the battlefield", function() {
@@ -186,11 +186,11 @@ describe("BattlefieldWebRender", function() {
      3
    );
 
-   tileHover = battlefield_web_render.tileHover;
-   expect(tileHover["currently_hovering"]).toBe(false);
-   expect(tileHover["row"]).toBe(-1);
-   expect(tileHover["column"]).toBe(-1);
-   expect(tileHover["index"]).toBe(-1);
+   tile_hover = battlefield_web_render.tile_hover;
+   expect(tile_hover["currently_hovering"]).toBe(false);
+   expect(tile_hover["row"]).toBe(-1);
+   expect(tile_hover["column"]).toBe(-1);
+   expect(tile_hover["index"]).toBe(-1);
   });
 
   it("indicates a different tile when camera scrolls mouse to different part of battlefield", function() {
@@ -210,11 +210,11 @@ describe("BattlefieldWebRender", function() {
      3
    );
 
-   tileHover = battlefield_web_render.tileHover;
-   expect(tileHover["currently_hovering"]).toBe(true);
-   expect(tileHover["row"]).toBe(1);
-   expect(tileHover["column"]).toBe(0);
-   expect(tileHover["index"]).toBe(2);
+   tile_hover = battlefield_web_render.tile_hover;
+   expect(tile_hover["currently_hovering"]).toBe(true);
+   expect(tile_hover["row"]).toBe(1);
+   expect(tile_hover["column"]).toBe(0);
+   expect(tile_hover["index"]).toBe(2);
   });
 
   it("doesn't hover the offset tile", function() {
@@ -234,11 +234,11 @@ describe("BattlefieldWebRender", function() {
      3
    );
 
-   tileHover = battlefield_web_render.tileHover;
-   expect(tileHover["currently_hovering"]).toBe(false);
-   expect(tileHover["row"]).toBe(-1);
-   expect(tileHover["column"]).toBe(-1);
-   expect(tileHover["index"]).toBe(-1);
+   tile_hover = battlefield_web_render.tile_hover;
+   expect(tile_hover["currently_hovering"]).toBe(false);
+   expect(tile_hover["row"]).toBe(-1);
+   expect(tile_hover["column"]).toBe(-1);
+   expect(tile_hover["index"]).toBe(-1);
   });
 
   it("Moves the camera horizontally", function() {
