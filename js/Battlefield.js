@@ -102,9 +102,14 @@ var battlefield = {
     mouseY = input_state.mouseY;
 
     // Tell the renderer where the mouse is so it can update its context.
-    battlefield.renderer.update_mouse_location(
+    battlefield.renderer.updateMouseLocation(
       mouseX,
       mouseY,
+      {
+        button_pressed: null,
+        button_is_up: false,
+        button_is_down: false,
+      },
       battlefield.camera,
       battlefield.battlefield_width,
       battlefield.battlefield_tiles.length

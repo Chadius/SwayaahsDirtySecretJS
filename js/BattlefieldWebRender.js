@@ -218,13 +218,22 @@ var battlefield_web_render = {
     canvasContext.drawImage(tile_to_draw, xcoord, ycoord);
   },
 
-  update_mouse_location: function(
+  updateMouseLocation: function(
     mouseX,
     mouseY,
+    mouse_button_info,
     camera_position,
     battlefield_width,
     battlefield_tile_count
   ) {
+    /*
+    mouseX: x location of the mouse relative to the screen.
+    mouseY: y location of the mouse relative to the screen.
+    mouse_button_info: object containing the keys: button_is_up, button_is_down and button_pressed
+    camera_position:
+    battlefield_width:
+    battlefield_tiles:
+    */
     battlefield_web_render.mouseLocation = {
       "mouseX": mouseX,
       "mouseY": mouseY
