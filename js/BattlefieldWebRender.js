@@ -111,6 +111,228 @@ var battlefield_web_render = {
     colorText("("+ mouseX + ", "+ mouseY +")", canvas.width - 100, canvas.height * 0.95, "hsl(0,100%,100%)");
   },
 
+  drawHighlightedTiles: function(
+    camera_position,
+    start_date
+  ) {
+    /*
+    Draws all of the highlighted tiles on the battlefield.
+      camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
+      start_date: Date object.
+    */
+
+    tile_drawing_information = [];
+
+    // Add the hover tile if needed
+    if (battlefield_web_render.tile_hover["currently_hovering"]) {
+      tile_drawing_information.push({
+        'xindex': battlefield_web_render.tile_hover["column"],
+        'yindex': battlefield_web_render.tile_hover["row"],
+        'start_date': start_date
+      });
+    }
+
+    battlefield_web_render._genericTileDraw(
+      tile_drawing_information,
+      camera_position,
+      battlefield_web_render._drawHoverTile
+    );
+  },
+
+  getNewCameraPosition: function(current_camera_position, current_mouse_location,
+    screen_dimensions, battlefield_width, battlefield_tile_count) {
+    /* Returns an object with "x" and "y" keys that represents the new camera location.
+
+    current_camera_position is an object with "xcoord" and "ycoord" keys
+      representing what the upperleft corner of ths screen is pointing at.
+    current_mouse_location is an object with "mouseX" and "mouseY" keys
+      representing where the mouse is on screen.
+    screen_dimensions: Object with "width" and "height" keys representing
+      the overall dimensions of the screen.
+    battlefield_width: The maximum number of tiles on the row.
+    battlefield_tile_count: The total number of tiles in this map. Every line
+      is filled with tiles except the final one, maybe.
+    */
+
+    new_camera_position = {
+      "x": current_camera_position["xcoord"],
+      "y": current_camera_position["ycoord"]
+    };
+
+    // Get the width and height of the map.
+    battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
+      battlefield_width, battlefield_tile_count);
+
+    battlefield_pixel_width = battlefield_pixel_size["width"];
+    battlefield_pixel_height = battlefield_pixel_size["height"];
+
+    // Scroll camera left if needed
+    original_x = new_camera_position["x"];
+    if (battlefield_web_render._canCameraScrollInDirection(
+      "left",
+      new_camera_position["x"],
+      screen_dimensions["width"],
+      battlefield_width,
+      battlefield_tile_count
+    )) {
+      new_camera_position["x"] = battlefield_web_render._determineCameraScroll(
+        original_x,
+        screen_dimensions["width"],
+        current_mouse_location["mouseX"],
+        true,
+        0.2
+      );
+    }
+    // If you didn't scroll left, maybe scroll right
+    if (new_camera_position["x"] == original_x) {
+      if (battlefield_web_render._canCameraScrollInDirection(
+        "right",
+        new_camera_position["x"],
+        screen_dimensions["width"],
+        battlefield_width,
+        battlefield_tile_count
+      )) {
+        new_camera_position["x"] = battlefield_web_render._determineCameraScroll(
+          original_x,
+          screen_dimensions["width"],
+          current_mouse_location["mouseX"],
+          false,
+          0.2
+        );
+      }
+    }
+
+    // Scroll camera up if needed
+    original_y = new_camera_position["y"];
+    if (battlefield_web_render._canCameraScrollInDirection(
+      "up",
+      new_camera_position["y"],
+      screen_dimensions["height"],
+      battlefield_width,
+      battlefield_tile_count
+    )) {
+      new_camera_position["y"] = battlefield_web_render._determineCameraScroll(
+        original_y,
+        screen_dimensions["height"],
+        current_mouse_location["mouseY"],
+        true,
+        0.2
+      );
+    }
+    // If you didn't scroll up, maybe scroll down
+    if (battlefield_web_render._canCameraScrollInDirection(
+      "down",
+      new_camera_position["y"],
+      screen_dimensions["height"],
+      battlefield_width,
+      battlefield_tile_count
+    )) {
+      if (new_camera_position["y"] == original_y) {
+        new_camera_position["y"] = battlefield_web_render._determineCameraScroll(
+          original_y,
+          screen_dimensions["height"],
+          current_mouse_location["mouseY"],
+          false,
+          0.2
+        );
+      }
+    }
+
+    return new_camera_position;
+  },
+
+  updateMouseLocation: function(
+    mouseX,
+    mouseY,
+    mouse_button_info,
+    camera_position,
+    battlefield_width,
+    battlefield_tile_count
+  ) {
+    /*
+    mouseX: x location of the mouse relative to the screen.
+    mouseY: y location of the mouse relative to the screen.
+    mouse_button_info: object containing the keys: button_is_up, button_is_down and button_pressed
+    camera_position:
+    battlefield_width:
+    battlefield_tiles:
+    */
+    battlefield_web_render.mouse_location = {
+      "mouseX": mouseX,
+      "mouseY": mouseY
+    };
+
+    battlefield_web_render.tile_hover = {
+      "currently_hovering": false,
+      "column": -1,
+      "row": -1,
+      "index": -1
+    };
+
+    // Which tile is the mouse hovering over?
+    // First figure out if it's on the battlefield.
+    mouse_field_x = mouseX + camera_position.xcoord;
+    mouse_field_y = mouseY + camera_position.ycoord;
+
+    // Get the battlefield dimensions.
+    battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
+      battlefield_width, battlefield_tile_count);
+
+    battlefield_pixel_width = battlefield_pixel_size["width"];
+    battlefield_pixel_height = battlefield_pixel_size["height"];
+
+    // If it isn't on the field, then it's not hovering.
+    not_on_horizontal = (mouse_field_x < 0 || mouse_field_x > battlefield_pixel_width);
+    not_on_vertical = (mouse_field_y < 0 || mouse_field_y > battlefield_pixel_height);
+
+    if (not_on_vertical || not_on_horizontal) {
+      battlefield_web_render.tile_hover = {
+        "currently_hovering": false,
+        "column": -1,
+        "row": -1,
+        "index": -1
+      };
+    }
+    else {
+      // Determine which row the cursor is on.
+      tile_row = Math.floor(mouse_field_y / tile_size);
+
+      // Now determine the column.
+      tile_column = Math.floor(mouse_field_x / tile_size);
+
+      // This is a hex grid, so every other row has an offset.
+      if (tile_row % 2 == 1) {
+        tile_column = Math.floor((mouse_field_x - half_tile_size) / tile_size);
+      }
+
+      // Get the index.
+      tile_index = (tile_row * battlefield_width) + tile_column;
+
+      // If the given tile doesn't exist, the tile isn't hovering.
+      if (
+        tile_index >= battlefield_tile_count
+        || tile_column < 0
+        || tile_row < 0
+      ) {
+        battlefield_web_render.tile_hover = {
+          "currently_hovering": false,
+          "column": -1,
+          "row": -1,
+          "index": -1
+        };
+      }
+      else {
+        // Update the variable.
+        battlefield_web_render.tile_hover = {
+          "currently_hovering": true,
+          "column": tile_column,
+          "row": tile_row,
+          "index": tile_index
+        };
+      }
+    }
+  },
+
   _drawBattlefieldBackground: function() {
     // Draws the background.
     var background_color = "hsl(288, 10%, 15%)";
@@ -218,98 +440,6 @@ var battlefield_web_render = {
     canvas_context.drawImage(tile_to_draw, xcoord, ycoord);
   },
 
-  updateMouseLocation: function(
-    mouseX,
-    mouseY,
-    mouse_button_info,
-    camera_position,
-    battlefield_width,
-    battlefield_tile_count
-  ) {
-    /*
-    mouseX: x location of the mouse relative to the screen.
-    mouseY: y location of the mouse relative to the screen.
-    mouse_button_info: object containing the keys: button_is_up, button_is_down and button_pressed
-    camera_position:
-    battlefield_width:
-    battlefield_tiles:
-    */
-    battlefield_web_render.mouse_location = {
-      "mouseX": mouseX,
-      "mouseY": mouseY
-    };
-
-    battlefield_web_render.tile_hover = {
-      "currently_hovering": false,
-      "column": -1,
-      "row": -1,
-      "index": -1
-    };
-
-    // Which tile is the mouse hovering over?
-    // First figure out if it's on the battlefield.
-    mouse_field_x = mouseX + camera_position.xcoord;
-    mouse_field_y = mouseY + camera_position.ycoord;
-
-    // Get the battlefield dimensions.
-    battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
-      battlefield_width, battlefield_tile_count);
-
-    battlefield_pixel_width = battlefield_pixel_size["width"];
-    battlefield_pixel_height = battlefield_pixel_size["height"];
-
-    // If it isn't on the field, then it's not hovering.
-    not_on_horizontal = (mouse_field_x < 0 || mouse_field_x > battlefield_pixel_width);
-    not_on_vertical = (mouse_field_y < 0 || mouse_field_y > battlefield_pixel_height);
-
-    if (not_on_vertical || not_on_horizontal) {
-      battlefield_web_render.tile_hover = {
-        "currently_hovering": false,
-        "column": -1,
-        "row": -1,
-        "index": -1
-      };
-    }
-    else {
-      // Determine which row the cursor is on.
-      tile_row = Math.floor(mouse_field_y / tile_size);
-
-      // Now determine the column.
-      tile_column = Math.floor(mouse_field_x / tile_size);
-
-      // This is a hex grid, so every other row has an offset.
-      if (tile_row % 2 == 1) {
-        tile_column = Math.floor((mouse_field_x - half_tile_size) / tile_size);
-      }
-
-      // Get the index.
-      tile_index = (tile_row * battlefield_width) + tile_column;
-
-      // If the given tile doesn't exist, the tile isn't hovering.
-      if (
-        tile_index >= battlefield_tile_count
-        || tile_column < 0
-        || tile_row < 0
-      ) {
-        battlefield_web_render.tile_hover = {
-          "currently_hovering": false,
-          "column": -1,
-          "row": -1,
-          "index": -1
-        };
-      }
-      else {
-        // Update the variable.
-        battlefield_web_render.tile_hover = {
-          "currently_hovering": true,
-          "column": tile_column,
-          "row": tile_row,
-          "index": tile_index
-        };
-      }
-    }
-  },
-
   _getMapPixelDimensions: function(battlefield_width, battlefield_tile_count) {
     /*
       Returns an object with "width" and "height" keys representing
@@ -325,108 +455,6 @@ var battlefield_web_render = {
       "width": battlefield_pixel_width,
       "height": battlefield_pixel_height,
     }
-  },
-
-  getNewCameraPosition: function(current_camera_position, current_mouse_location,
-    screen_dimensions, battlefield_width, battlefield_tile_count) {
-    /* Returns an object with "x" and "y" keys that represents the new camera location.
-
-    current_camera_position is an object with "xcoord" and "ycoord" keys
-      representing what the upperleft corner of ths screen is pointing at.
-    current_mouse_location is an object with "mouseX" and "mouseY" keys
-      representing where the mouse is on screen.
-    screen_dimensions: Object with "width" and "height" keys representing
-      the overall dimensions of the screen.
-    battlefield_width: The maximum number of tiles on the row.
-    battlefield_tile_count: The total number of tiles in this map. Every line
-      is filled with tiles except the final one, maybe.
-    */
-
-    new_camera_position = {
-      "x": current_camera_position["xcoord"],
-      "y": current_camera_position["ycoord"]
-    };
-
-    // Get the width and height of the map.
-    battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
-      battlefield_width, battlefield_tile_count);
-
-    battlefield_pixel_width = battlefield_pixel_size["width"];
-    battlefield_pixel_height = battlefield_pixel_size["height"];
-
-    // Scroll camera left if needed
-    original_x = new_camera_position["x"];
-    if (battlefield_web_render._canCameraScrollInDirection(
-      "left",
-      new_camera_position["x"],
-      screen_dimensions["width"],
-      battlefield_width,
-      battlefield_tile_count
-    )) {
-      new_camera_position["x"] = battlefield_web_render._determineCameraScroll(
-        original_x,
-        screen_dimensions["width"],
-        current_mouse_location["mouseX"],
-        true,
-        0.2
-      );
-    }
-    // If you didn't scroll left, maybe scroll right
-    if (new_camera_position["x"] == original_x) {
-      if (battlefield_web_render._canCameraScrollInDirection(
-        "right",
-        new_camera_position["x"],
-        screen_dimensions["width"],
-        battlefield_width,
-        battlefield_tile_count
-      )) {
-        new_camera_position["x"] = battlefield_web_render._determineCameraScroll(
-          original_x,
-          screen_dimensions["width"],
-          current_mouse_location["mouseX"],
-          false,
-          0.2
-        );
-      }
-    }
-
-    // Scroll camera up if needed
-    original_y = new_camera_position["y"];
-    if (battlefield_web_render._canCameraScrollInDirection(
-      "up",
-      new_camera_position["y"],
-      screen_dimensions["height"],
-      battlefield_width,
-      battlefield_tile_count
-    )) {
-      new_camera_position["y"] = battlefield_web_render._determineCameraScroll(
-        original_y,
-        screen_dimensions["height"],
-        current_mouse_location["mouseY"],
-        true,
-        0.2
-      );
-    }
-    // If you didn't scroll up, maybe scroll down
-    if (battlefield_web_render._canCameraScrollInDirection(
-      "down",
-      new_camera_position["y"],
-      screen_dimensions["height"],
-      battlefield_width,
-      battlefield_tile_count
-    )) {
-      if (new_camera_position["y"] == original_y) {
-        new_camera_position["y"] = battlefield_web_render._determineCameraScroll(
-          original_y,
-          screen_dimensions["height"],
-          current_mouse_location["mouseY"],
-          false,
-          0.2
-        );
-      }
-    }
-
-    return new_camera_position;
   },
 
   _determineCameraScroll: function(
@@ -525,34 +553,6 @@ var battlefield_web_render = {
 
     // The camera is out of bounds. Stop scolling.
     return false;
-  },
-
-  drawHighlightedTiles: function(
-    camera_position,
-    start_date
-  ) {
-    /*
-    Draws all of the highlighted tiles on the battlefield.
-      camera_position: The upperleft corner of the camera with xcoord and ycoord properties.
-      start_date: Date object.
-    */
-
-    tile_drawing_information = [];
-
-    // Add the hover tile if needed
-    if (battlefield_web_render.tile_hover["currently_hovering"]) {
-      tile_drawing_information.push({
-        'xindex': battlefield_web_render.tile_hover["column"],
-        'yindex': battlefield_web_render.tile_hover["row"],
-        'start_date': start_date
-      });
-    }
-
-    battlefield_web_render._genericTileDraw(
-      tile_drawing_information,
-      camera_position,
-      battlefield_web_render._drawHoverTile
-    );
   },
 
   _drawHoverTile: function(xcoord, ycoord, drawing_info) {
