@@ -34,6 +34,8 @@ function moveAll() {
       "height": canvas.height,
     },
   );
+
+  inputHandler.resetInputFlags();
   //blueCar.move();
   //greenCar.move();
 }

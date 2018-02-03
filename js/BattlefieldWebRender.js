@@ -61,6 +61,12 @@ var battlefield_web_render = {
     "index": -1
   },
 
+  last_tile_clicked: {
+    "column": -1,
+    "row": -1,
+    "index": -1
+  },
+
   loadRequiredImages: function() {
     // These are images that MUST be loaded before displaying anything to the user.
     var name_to_file_mapping = [];
@@ -252,10 +258,11 @@ var battlefield_web_render = {
     /*
     mouseX: x location of the mouse relative to the screen.
     mouseY: y location of the mouse relative to the screen.
-    mouse_button_info: object containing the keys: button_is_up, button_is_down and button_pressed
+    mouse_button_info: object
+      mouse_button_clicked: null or a button index.
     camera_position:
     battlefield_width:
-    battlefield_tiles:
+    battlefield_tile_count:
     */
     battlefield_web_render.mouse_location = {
       "mouseX": mouseX,
@@ -329,6 +336,126 @@ var battlefield_web_render = {
           "row": tile_row,
           "index": tile_index
         };
+      }
+    }
+  },
+
+  updateMouseLocation: function(
+    mouseX,
+    mouseY,
+    mouse_button_info,
+    camera_position,
+    battlefield_width,
+    battlefield_tile_count
+  ) {
+    /*
+    mouseX: x location of the mouse relative to the screen.
+    mouseY: y location of the mouse relative to the screen.
+    mouse_button_info:
+      mouse_button_clicked: can be null or an index corresponding to the mouse button that was clicked
+    camera_position:
+    battlefield_width:
+    battlefield_tile_count:
+    */
+    battlefield_web_render.mouse_location = {
+      "mouseX": mouseX,
+      "mouseY": mouseY
+    };
+
+    battlefield_web_render.tile_hover = {
+      "currently_hovering": false,
+      "column": -1,
+      "row": -1,
+      "index": -1
+    };
+
+    // Which tile is the mouse hovering over?
+    // First figure out if it's on the battlefield.
+    mouse_field_x = mouseX + camera_position.xcoord;
+    mouse_field_y = mouseY + camera_position.ycoord;
+
+    // Get the battlefield dimensions.
+    battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
+      battlefield_width, battlefield_tile_count);
+
+    battlefield_pixel_width = battlefield_pixel_size["width"];
+    battlefield_pixel_height = battlefield_pixel_size["height"];
+
+    // If it isn't on the field, then it's not hovering.
+    not_on_horizontal = (mouse_field_x < 0 || mouse_field_x > battlefield_pixel_width);
+    not_on_vertical = (mouse_field_y < 0 || mouse_field_y > battlefield_pixel_height);
+
+    if (not_on_vertical || not_on_horizontal) {
+      battlefield_web_render.tile_hover = {
+        "currently_hovering": false,
+        "column": -1,
+        "row": -1,
+        "index": -1
+      };
+
+      // If the user is clicking, clear the last tile clicked.
+      if (mouse_button_info.mouse_button_clicked == 0 || mouse_button_info.mouse_button_clicked) {
+        battlefield_web_render.last_tile_clicked = {
+          "column": -1,
+          "row": -1,
+          "index": -1
+        };
+      }
+    }
+    else {
+      // Determine which row the cursor is on.
+      tile_row = Math.floor(mouse_field_y / tile_size);
+
+      // Now determine the column.
+      tile_column = Math.floor(mouse_field_x / tile_size);
+
+      // This is a hex grid, so every other row has an offset.
+      if (tile_row % 2 == 1) {
+        tile_column = Math.floor((mouse_field_x - half_tile_size) / tile_size);
+      }
+
+      // Get the index.
+      tile_index = (tile_row * battlefield_width) + tile_column;
+
+      // If the given tile doesn't exist, the tile isn't hovering.
+      if (
+        tile_index >= battlefield_tile_count
+        || tile_column < 0
+        || tile_row < 0
+      ) {
+        battlefield_web_render.tile_hover = {
+          "currently_hovering": false,
+          "column": -1,
+          "row": -1,
+          "index": -1
+        };
+
+        // If the user is clicking, clear the last tile clicked.
+        if (mouse_button_info.mouse_button_clicked == 0 || mouse_button_info.mouse_button_clicked) {
+          battlefield_web_render.last_tile_clicked = {
+            "column": -1,
+            "row": -1,
+            "index": -1
+          };
+        }
+      }
+      else {
+        // Update the variable.
+        battlefield_web_render.tile_hover = {
+          "currently_hovering": true,
+          "column": tile_column,
+          "row": tile_row,
+          "index": tile_index
+        };
+
+        // If the user is clicking, clear the last tile clicked.
+        if (mouse_button_info.mouse_button_clicked == 0 || mouse_button_info.mouse_button_clicked) {
+          battlefield_web_render.last_tile_clicked = {
+            "column": tile_column,
+            "row": tile_row,
+            "index": tile_index
+          };
+        }
       }
     }
   },
@@ -576,5 +703,4 @@ var battlefield_web_render = {
     var highlight_color = "hsl(350, 80%, " + light_level + ")";
     colorStrokeRect(xcoord, ycoord, tile_size, tile_size, highlight_color);
   },
-
 }

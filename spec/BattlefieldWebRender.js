@@ -394,4 +394,27 @@ describe("BattlefieldWebRender", function() {
     expect(new_camera_position["x"]).toBe(1.5 * tile_size);
     expect(new_camera_position["y"]).toBe(3 * tile_size);
   });
+
+  it("Can track mouse clicks", function() {
+    battlefield_web_render.updateMouseLocation(
+     0,
+     0,
+     {
+       mouse_button_clicked: 0
+     },
+     {
+       xcoord: 0,
+       ycoord: 0,
+     },
+     1,
+     1
+   );
+
+   tile_hover = battlefield_web_render.tile_hover;
+   tile_hover = battlefield_web_render.tile_hover;
+   expect(tile_hover["currently_hovering"]).toBe(true);
+   expect(tile_hover["row"]).toBe(0);
+   expect(tile_hover["column"]).toBe(0);
+   expect(tile_hover["index"]).toBe(0);
+  });
 });
