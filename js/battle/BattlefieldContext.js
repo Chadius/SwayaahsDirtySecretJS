@@ -1,6 +1,110 @@
 /*
-battlefield moves units and performs logic.
+battlefield context knows what the tiles and units are, where they are
+located, and what they want to do next.
 */
+
+var battlefield_context = {
+  // The renderer draws objects on the screen.
+  renderer: null,
+
+  // The camera focuses on which objects to draw. It can also update the context.
+  camera: null,
+
+  // The input handler interprets the player's raw input.
+  input: null,
+
+  // Screen size. Object with width and height attributes
+  screen_dimensions: null,
+
+  //How wide is the battlefield?
+  _width: 5,
+
+  //Movement costs of each tile, and the visual display
+  _tile_movement: [
+    1,2,1,1,1,
+     1,3,1,1,1,
+    1,1,3,2,0
+  ],
+
+  _tileset_graphics: [
+    1,2,1,1,1,
+     1,3,1,1,1,
+    1,1,3,2,0
+  ],
+
+  _tileset_code: {
+    0: "wall",
+    1: "single",
+    2: "double",
+    3: "passthrough"
+  },
+
+  setTiles: function (width, movement_tiles) {
+    /* Sets the tiles used for this battle.
+
+    width: How wide is each row?
+    movement_tiles: A list containing The movement cost of each tile. Each entry
+      is a single character.
+      1: Single. Spend 1 movement to cross or stop.
+      2: Double. Spend 2 movement to cross or stop.
+      3: Passthrough. Spend 1 movement to cross. Cannot stop. Must be able to
+        use Passthrough tiles.
+      0: Wall. Cannot cross through or stop on.
+    */
+
+    // TODO: Verify width is positive.
+    battlefield_context._width = width;
+
+    // TODO: If there aren't enough, autofill so Walls fill up the final row.
+    battlefield_context._tile_movement = movement_tiles;
+  },
+
+  getCameraPosition: function() {
+    /* Returns the camera position as an object.
+    */
+    return battlefield_context.camera.getCameraLocation();
+  },
+
+  resetCamera: function (new_camera_x, new_camera_y) {
+    /* Immediately snaps the camera to the new position.
+
+    If coordinates are not given, snaps to (0,0)
+    */
+    battlefield_context.camera.snapToLocation(new_camera_x, new_camera_y);
+  },
+
+  resetInput: function () {
+    /* Resets the tracked input variables. */
+  },
+
+  handleInput: function(player_input_controller) {
+    /* The user may or may not have input. Process it as needed.
+    player_input_controller should have these attributes
+    */
+
+    // Get the size of the battlefield.
+    battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
+      battlefield_context.battlefield_width,
+      battlefield_context._tile_movement.length);
+
+    battlefield_pixel_width = battlefield_pixel_size["width"];
+    battlefield_pixel_height = battlefield_pixel_size["height"];
+
+    // Get the tile size.
+    tile_size = battlefield_web_render.getTileSize();
+
+    // Ask the camera to scroll.
+    battlefield_camera.scrollCameraBasedOnMouse(
+      player_input_controller.getMouseLocation(),
+      battlefield_context.screen_dimensions,
+      {
+        width: battlefield_pixel_width,
+        height: battlefield_pixel_height
+      },
+      tile_size
+    );
+  }
+};
 
 var battlefield = {
   battlefield_width: 5,

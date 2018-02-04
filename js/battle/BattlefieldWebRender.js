@@ -703,4 +703,8 @@ var battlefield_web_render = {
     var highlight_color = "hsl(350, 80%, " + light_level + ")";
     colorStrokeRect(xcoord, ycoord, tile_size, tile_size, highlight_color);
   },
+
+  getTileSize: function() {
+    return battlefield_web_render.tile_size;
+  }
 }
