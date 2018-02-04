@@ -75,6 +75,7 @@ var battlefield_context = {
 
   resetInput: function () {
     /* Resets the tracked input variables. */
+    battlefield_input.reset();
   },
 
   handleInput: function(player_input_controller) {
@@ -84,25 +85,52 @@ var battlefield_context = {
 
     // Get the size of the battlefield.
     battlefield_pixel_size = battlefield_web_render._getMapPixelDimensions(
-      battlefield_context.battlefield_width,
+      battlefield_context._width,
       battlefield_context._tile_movement.length);
 
     battlefield_pixel_width = battlefield_pixel_size["width"];
     battlefield_pixel_height = battlefield_pixel_size["height"];
 
     // Get the tile size.
-    tile_size = battlefield_web_render.getTileSize();
+    battlefield_tile_size = battlefield_web_render.getTileSize();
+
+    mouse_screen_location = {
+      x: player_input_controller.mouseX,
+      y: player_input_controller.mouseY,
+    };
+
+    // Update the tile selections.
+    battlefield_input.setMouse(mouse_screen_location);
+    battlefield_input.updateTilesSelection(
+      battlefield_camera.getCameraLocation(),
+      {
+        width: battlefield_pixel_width,
+        height: battlefield_pixel_height
+      },
+      battlefield_tile_size,
+      battlefield_context._width,
+      battlefield_context._tile_movement.length
+    );
 
     // Ask the camera to scroll.
     battlefield_camera.scrollCameraBasedOnMouse(
-      player_input_controller.getMouseLocation(),
+      mouse_screen_location,
       battlefield_context.screen_dimensions,
       {
         width: battlefield_pixel_width,
         height: battlefield_pixel_height
       },
-      tile_size
+      battlefield_tile_size
     );
+  },
+
+  getTileMouseHoversOver: function () {
+    /* If the player is currently hovering over a battlefield tile,
+    returns information on it.
+    */
+
+    // Ask the input to return the hovered tile.
+    return battlefield_input.getTileMouseHoversOver();
   }
 };
 

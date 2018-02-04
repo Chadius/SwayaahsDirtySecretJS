@@ -187,13 +187,15 @@ var battlefield_camera = {
     */
     new_camera = camera_location;
     amount_past_screen_margin = 0;
+
+
     if (scroll_if_mouse_less_than_screen) {
       screen_margin = screen_size * scroll_threshold;
       amount_past_screen_margin = screen_margin - current_mouse_location;
       new_camera = camera_location - 5;
     }
     else {
-      screen_margin = screen_size - (screen_dimension * scroll_threshold);
+      screen_margin = screen_size - (screen_size * scroll_threshold);
       amount_past_screen_margin = current_mouse_location - screen_margin;
       new_camera = camera_location + 5;
     }

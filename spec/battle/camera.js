@@ -1,16 +1,7 @@
 describe("battlefield_camera", function() {
   var default_input = {
-    getMouseLocation: function () {
-      return {
-        x: 0,
-        y: 0
-      }
-    },
-    getMouseClicked: function () {
-      return {
-        button_clicked: null
-      }
-    }
+      mouseX: 0,
+      mouseY: 0
   };
   var canvas = {
     width: 0,
@@ -35,21 +26,16 @@ describe("battlefield_camera", function() {
     // Tell the battle context where the camera is.
     battlefield_context.resetCamera(tile_size, tile_size);
 
+    // Set the tiles
+    battlefield_context.setTiles(2, [1,1,1,1]);
+
     // Tell the battle context where the mouse is.
     battlefield_context.handleInput(
       {
-        getMouseLocation: function () {
-          return {
-            x: 0,
-            y: canvas.height / 2.0
-          }
-        },
-        getMouseClicked: default_input.getMouseClicked
+          mouseX: 0,
+          mouseY: canvas.height / 2.0
       }
     );
-
-    // Set the tiles
-    battlefield_context.setTiles(2, [1,1,1,1]);
 
     // Now get the camera position
     new_camera_position = battlefield_context.getCameraPosition();
@@ -62,21 +48,16 @@ describe("battlefield_camera", function() {
     // Tell the battle context where the camera is.
     battlefield_context.resetCamera(tile_size, tile_size);
 
+    // Set the tiles
+    battlefield_context.setTiles(2, [1,1,1,1]);
+
     // Tell the battle context where the mouse is.
     battlefield_context.handleInput(
       {
-        getMouseLocation: function () {
-          return {
-            x: canvas.width / 2.0,
-            y: 0
-          }
-        },
-        getMouseClicked: default_input.getMouseClicked
+            mouseX: canvas.width / 2.0,
+            mouseY: 0
       }
     );
-
-    // Set the tiles
-    battlefield_context.setTiles(2, [1,1,1,1]);
 
     // Now get the camera position
     new_camera_position = battlefield_context.getCameraPosition();
@@ -89,21 +70,16 @@ describe("battlefield_camera", function() {
     // Tell the battle context where the camera is.
     battlefield_context.resetCamera(canvas.width, canvas.height);
 
+    // Set the tiles
+    battlefield_context.setTiles(2, [1,1,1,1]);
+
     // Tell the battle context where the mouse is.
     battlefield_context.handleInput(
       {
-        getMouseLocation: function () {
-          return {
-            x: -3 * tile_size,
-            y: -3 * tile_size
-          }
-        },
-        getMouseClicked: default_input.getMouseClicked
+        mouseX: -3 * tile_size,
+        mouseY: -3 * tile_size
       }
     );
-
-    // Set the tiles
-    battlefield_context.setTiles(2, [1,1,1,1]);
 
     // Now get the camera position
     new_camera_position = battlefield_context.getCameraPosition();
@@ -116,21 +92,16 @@ describe("battlefield_camera", function() {
     // Tell the battle context where the camera is.
     battlefield_context.resetCamera(-3 * tile_size, 1.5 * tile_size);
 
+    // Set the tiles
+    battlefield_context.setTiles(2, [1,1,1,1]);
+
     // Tell the battle context where the mouse is.
     battlefield_context.handleInput(
       {
-        getMouseLocation: function () {
-          return {
-            x: 0,
-            y: canvas.height / 2
-          }
-        },
-        getMouseClicked: default_input.getMouseClicked
+        mouseX: 0,
+        mouseY: canvas.height / 2
       }
     );
-
-    // Set the tiles
-    battlefield_context.setTiles(2, [1,1,1,1]);
 
     // Now get the camera position
     new_camera_position = battlefield_context.getCameraPosition();
@@ -143,21 +114,16 @@ describe("battlefield_camera", function() {
     // Tell the battle context where the camera is.
     battlefield_context.resetCamera(3 * tile_size, 1.5 * tile_size);
 
+    // Set the tiles
+    battlefield_context.setTiles(2, [1,1,1,1]);
+
     // Tell the battle context where the mouse is.
     battlefield_context.handleInput(
       {
-        getMouseLocation: function () {
-          return {
-            x: canvas.width,
-            y: canvas.height / 2
-          }
-        },
-        getMouseClicked: default_input.getMouseClicked
+        mouseX: canvas.width,
+        mouseY: canvas.height / 2
       }
     );
-
-    // Set the tiles
-    battlefield_context.setTiles(2, [1,1,1,1]);
 
     // Now get the camera position
     new_camera_position = battlefield_context.getCameraPosition();
@@ -170,21 +136,16 @@ describe("battlefield_camera", function() {
     // Tell the battle context where the camera is.
     battlefield_context.resetCamera(1.5 * tile_size, -3 * tile_size);
 
+    // Set the tiles
+    battlefield_context.setTiles(2, [1,1,1,1]);
+
     // Tell the battle context where the mouse is.
     battlefield_context.handleInput(
       {
-        getMouseLocation: function () {
-          return {
-            x: canvas.width / 2,
-            y: 0
-          }
-        },
-        getMouseClicked: default_input.getMouseClicked
+        mouseX: canvas.width / 2,
+        mouseY: 0
       }
     );
-
-    // Set the tiles
-    battlefield_context.setTiles(2, [1,1,1,1]);
 
     // Now get the camera position
     new_camera_position = battlefield_context.getCameraPosition();
@@ -197,21 +158,16 @@ describe("battlefield_camera", function() {
     // Tell the battle context where the camera is.
     battlefield_context.resetCamera(1.5 * tile_size, 3 * tile_size);
 
+    // Set the tiles
+    battlefield_context.setTiles(2, [1,1,1,1]);
+
     // Tell the battle context where the mouse is.
     battlefield_context.handleInput(
       {
-        getMouseLocation: function () {
-          return {
-            x: canvas.width / 2,
-            y: canvas.height
-          }
-        },
-        getMouseClicked: default_input.getMouseClicked
+        mouseX: canvas.width / 2,
+        mouseY: canvas.height
       }
     );
-
-    // Set the tiles
-    battlefield_context.setTiles(2, [1,1,1,1]);
 
     // Now get the camera position
     new_camera_position = battlefield_context.getCameraPosition();
