@@ -19,6 +19,9 @@ var battlefield_context = {
   //How wide is the battlefield?
   _width: 5,
 
+  // Just here for timing
+  start_date: null,
+
   //Movement costs of each tile, and the visual display
   _tile_movement: [
     1,2,1,1,1,
@@ -131,52 +134,22 @@ var battlefield_context = {
 
     // Ask the input to return the hovered tile.
     return battlefield_input.getTileMouseHoversOver();
-  }
-};
-
-var battlefield = {
-  battlefield_width: 5,
-
-  battlefield_tiles: [
-    1,2,1,1,1,
-     1,3,1,1,1,
-    1,1,3,2,0
-  ],
-
-  renderer: null,
-
-  start_date: null,
-
-  tile_code_to_nickname: {
-    0: "wall",
-    1: "single",
-    2: "double",
-    3: "passthrough"
-  },
-
-  camera: {
-    'xcoord': 0,
-    'ycoord': 0
   },
 
   drawBattlefield: function() {
     //Draws all of the graphics for the battlefield.
 
     // First get all of the tile locations.
-    tile_info = battlefield.getTerrainTileInfo();
+    tile_info = battlefield_context.getTerrainTileInfo();
 
     // Render the tiles.
-    battlefield.renderer.drawBattlefield(
-      tile_info['tile_texture'],
-      battlefield.camera,
-      tile_info['size']
+    battlefield_context.renderer.drawBattlefield(
+      tile_info.tile_texture,
+      battlefield_camera.getCameraLocation(),
+      battlefield_input.getMouseLocation()
     );
 
     // Draw the tile the mouse is hovering over.
-    battlefield.renderer.drawHighlightedTiles(
-      battlefield.camera,
-      battlefield.start_time
-    );
   },
 
   getTerrainTileInfo: function() {
@@ -226,41 +199,5 @@ var battlefield = {
     tile_info['size']['width'] = tile_width;
     tile_info['size']['height'] = tile_height;
     return tile_info;
-  },
-
-  handleInput: function(input_state, screen_dimensions) {
-    /* interpret the input state. */
-    mouseX = input_state.mouseX;
-    mouseY = input_state.mouseY;
-    mouse_button_clicked = input_state.button_clicked;
-
-    // Tell the renderer where the mouse is so it can update its context.
-    battlefield.renderer.updateMouseLocation(
-      mouseX,
-      mouseY,
-      {
-        mouse_button_clicked: mouse_button_clicked
-      },
-      battlefield.camera,
-      battlefield.battlefield_width,
-      battlefield.battlefield_tiles.length
-    );
-
-    // Move the camera if necessary.
-    new_camera = battlefield.renderer.getNewCameraPosition(
-      {
-        "xcoord": battlefield.camera['xcoord'],
-        "ycoord": battlefield.camera['ycoord']
-      },
-      {
-        "mouseX": mouseX,
-        "mouseY": mouseY
-      },
-      screen_dimensions,
-      battlefield.battlefield_width,
-      battlefield.battlefield_tiles.length
-    );
-    battlefield.camera['xcoord'] = new_camera['x'];
-    battlefield.camera['ycoord'] = new_camera['y'];
   }
-}
+};

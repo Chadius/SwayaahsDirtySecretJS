@@ -20,6 +20,10 @@ var battlefield_input = {
     return battlefield_input.tile_currently_hovering;
   },
 
+  getMouseLocation: function() {
+    return battlefield_input.last_mouse_location;
+  },
+
   setMouse: function(mouse_info) {
     /* Accesses the mouse_info to learn about where the mouse is.*/
 
