@@ -195,4 +195,46 @@ describe("battlefield_tile_select", function() {
     tile_hover = battlefield_context.getTileMouseHoversOver();
     expect(tile_hover).toBeFalsy();
   });
+
+  it("remembers the last tile mouse hovered over", function() {
+    // Hover over a tile
+    battlefield_context.resetCamera(0,0);
+    battlefield_context.setTiles(2, [1,1,1]);
+    battlefield_context.handleInput(
+      {
+        mouseX: tile_size /2,
+        mouseY: tile_size,
+      }
+    );
+
+    // Ask which tile the mouse is hovering over
+    tile_hover = battlefield_context.getTileMouseHoversOver();
+    expect(tile_hover).toBeTruthy();
+    expect(tile_hover.row).toBe(1);
+    expect(tile_hover.column).toBe(0);
+    expect(tile_hover.index).toBe(2);
+
+    // Make sure last_tile_hovered matches
+    last_tile_hover = battlefield_context.getLastTileMouseHoversOver();
+    expect(last_tile_hover).toBeTruthy();
+    expect(last_tile_hover.row).toBe(1);
+    expect(last_tile_hover.column).toBe(0);
+    expect(last_tile_hover.index).toBe(2);
+
+    // Now hover off the map
+    battlefield_context.setTiles(1, [1]);
+    battlefield_context.resetCamera(-1 * tile_size, -1 * tile_size);
+    battlefield_context.handleInput(default_input);
+
+    // Ask which tile the mouse is hovering over
+    tile_hover = battlefield_context.getTileMouseHoversOver();
+    expect(tile_hover).toBeFalsy();
+
+    // Make sure last_tile_hovered hasn't changed
+    last_tile_hover = battlefield_context.getLastTileMouseHoversOver();
+    expect(last_tile_hover).toBeTruthy();
+    expect(last_tile_hover.row).toBe(1);
+    expect(last_tile_hover.column).toBe(0);
+    expect(last_tile_hover.index).toBe(2);
+  });
 });

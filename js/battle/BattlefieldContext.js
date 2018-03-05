@@ -136,6 +136,14 @@ var battlefield_context = {
     return battlefield_input.getTileMouseHoversOver();
   },
 
+  getLastTileMouseHoversOver: function () {
+    /* This returns the last tile the user hovered over.
+    */
+
+    // Ask the input to return the hovered tile.
+    return battlefield_input.getLastTileMouseHoversOver();
+  },
+
   drawBattlefield: function() {
     //Draws all of the graphics for the battlefield.
 

@@ -11,6 +11,15 @@ var battlefield_input = {
   tile_currently_hovering: {
   },
 
+  // last_tile_hovered: This tracks the last tile the mouse hovered over.
+  last_tile_hovered: {
+  },
+
+  // last_tile_clicked
+  // unit_selected_tiles: A history of tiles that were selected for this unit
+  // map_selected_tile: Tiles selected on the map
+  // highlighted_tiles: A list of tiles currently on the map.
+
   reset: function () {
     /* Immediately clear all tracked input state. */
     battlefield_input.tile_currently_hovering = {};
@@ -18,6 +27,10 @@ var battlefield_input = {
 
   getTileMouseHoversOver: function() {
     return battlefield_input.tile_currently_hovering;
+  },
+
+  getLastTileMouseHoversOver: function() {
+    return battlefield_input.last_tile_hovered;
   },
 
   getMouseLocation: function() {
